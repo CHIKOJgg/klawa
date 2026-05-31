@@ -9,11 +9,13 @@ import java.util.List;
 @RestController
 public class ProjectsController {
     @PostMapping("/api/v1/projects")
-    public Project createProject(){}
+    public Project createProject(){
+        return  new Project();
+    }
 
     @GetMapping("/api/v1/projects")
     public List<Project> getProjects(){
-        return null;
+        return List.of(new Project());
     }
     @GetMapping("/api/v1/projects/{id}")
     public Project getProjects(@PathVariable String id){
@@ -26,7 +28,7 @@ public class ProjectsController {
     @DeleteMapping("/api/v1/projects/{id}")
     public void deleteProject(@PathVariable String id){}
 
-    @GetMapping("/api/v1/projects/{id}")
+    @GetMapping("/api/v1/projects/{id}/tasks")
     public List<Task> getTasks(@PathVariable String id){
         return null;
     }

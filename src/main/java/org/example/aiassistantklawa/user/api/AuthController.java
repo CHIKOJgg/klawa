@@ -1,37 +1,43 @@
 package org.example.aiassistantklawa.user.api;
 
+import lombok.RequiredArgsConstructor;
 import org.example.aiassistantklawa.user.domain.User;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api/v1/auth")
+@RequiredArgsConstructor
 public class AuthController {
-    @PostMapping("api/v1/auth/register")
-    public String registerUser(@RequestBody User user) {
-        return  user.toString();
+
+    private final AuthService authService;
+
+    @PostMapping("/register")
+    public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest registerRequest) {
+        return ResponseEntity.ok(authService.register(registerRequest));
     }
-    @PostMapping("api/v1/auth/login")
+
+    @PostMapping("/authenticate")
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest authRequest) {
+        return ResponseEntity.ok(authService.authenticate(authRequest));
+    }
+
+    @PostMapping("/login")
     public String login(@RequestBody User user) {
-        return  user.toString();
+        return user.toString();
     }
-    @PostMapping("api/v1/auth/refresh")
+
+    @PostMapping("/refresh")
     public String refreshJwt(@RequestBody User user) {
-        return  user.toString();
+        return user.toString();
     }
-    @PostMapping("api/v1/auth/logout")
+
+    @PostMapping("/logout")
     public void logout(@RequestBody User user) {
-
     }
-    @GetMapping("api/v1/auth/me")
+
+    @GetMapping("/me")
     public User getCurrUser(@RequestBody User user) {
-        return  user;
+        return user;
     }
-    @PostMapping("api/v1/auth/me")
-    public AuthController(@RequestBody User user){
-
-    }
-    @DeleteMapping
-    public void deleteUser(@RequestBody User user) {
-
-    }
-
 }
