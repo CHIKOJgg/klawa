@@ -18,7 +18,7 @@ target/
 *.iws
 *.iml
 *.ipr
-application-local.yaml
+
 
 ### NetBeans ###
 /nbproject/private/
@@ -32,3 +32,8 @@ build/
 
 ### VS Code ###
 .vscode/
+# Секреты — никогда в Git
+application-local.yaml
+application-local.yml
+*.env
+.env
