@@ -1,15 +1,19 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/ai_klawa_db
-    username: postgres
-    password: kolbaserbochkaBASS12345
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: validate
     show-sql: true
     properties:
       hibernate:
         format_sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: 86400000
+  #0ca64563e7825247168414b71b95ce211774ea56b1adbfbffe89a597ed407e73
