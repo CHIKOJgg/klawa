@@ -32,7 +32,7 @@ build/
 
 ### VS Code ###
 .vscode/
-# Секреты — никогда в Git
+# secrets
 application-local.yaml
 application-local.yml
 *.env
