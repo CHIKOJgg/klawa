@@ -1,6 +1,7 @@
 package org.example.aiassistantklawa.task.api;
 
-import org.springframework.scheduling.config.Task;
+
+import org.example.aiassistantklawa.task.domain.Task;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    password: kolbaserbochkaBASS12345
+jwt:
+  secret: 0ca64563e7825247168414b71b95ce211774ea56b1adbfbffe89a597ed407e73
+server:
+  port: 8008

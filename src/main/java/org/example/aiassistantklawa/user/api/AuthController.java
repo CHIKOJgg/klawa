@@ -35,7 +35,6 @@ public class AuthController {
     @PostMapping("/logout")
     public void logout(@RequestBody User user) {
     }
-
     @GetMapping("/me")
     public User getCurrUser(@RequestBody User user) {
         return user;

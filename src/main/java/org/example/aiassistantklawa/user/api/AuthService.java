@@ -1,6 +1,7 @@
 package org.example.aiassistantklawa.user.api;
 
 import io.jsonwebtoken.Jwts;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.aiassistantklawa.config.JwtService;
 import org.example.aiassistantklawa.user.domain.Role;
@@ -19,8 +20,9 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    @Transactional
     public AuthenticationResponse register( RegisterRequest request) {
-        var user = User.builder()
+           var user = User.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .email(request.getEmail())
@@ -34,6 +36,7 @@ public class AuthService {
                 .token(jwtToken)
                 .build();
     }
+    @Transactional
     public  AuthenticationResponse authenticate( AuthenticationRequest request) {
         authenticationManager
                 .authenticate(
