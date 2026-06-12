@@ -1,5 +1,4 @@
 package org.example.aiassistantklawa.notification.api;
-
 import org.example.aiassistantklawa.notification.domain.Notification;
 import org.springframework.web.bind.annotation.*;
 
