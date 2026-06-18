@@ -32,8 +32,8 @@ public class User extends BaseEntity implements UserDetails {
     private String lastName;
     @Enumerated(EnumType.STRING)
     private Role roles;
-    @Column(name = "is_active")
-    private Boolean isActive;
+    @Column(name = "is_active",nullable = false)
+    private Boolean isActive =true;
 
 
     @Override
