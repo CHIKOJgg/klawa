@@ -26,7 +26,8 @@ public class SecurityConfiguration {
       http
               .csrf(AbstractHttpConfigurer::disable)
               .authorizeHttpRequests(auth -> auth
-                      .requestMatchers("/api/v1/auth/**").permitAll()  // public endpoints
+                      .requestMatchers("/api/v1/auth/**").permitAll()
+                      .requestMatchers("/actuator/**").permitAll()//
                       .anyRequest().authenticated()                     // everything else requires JWT
               )
               .sessionManagement(session -> session
