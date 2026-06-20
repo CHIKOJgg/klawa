@@ -1,0 +1,2 @@
+ALTER TABLE event_publication ADD COLUMN IF NOT EXISTS last_resubmission_date TIMESTAMP;
+CREATE INDEX IF NOT EXISTS idx_event_publication_last_resubmission_date ON event_publication(last_resubmission_date);

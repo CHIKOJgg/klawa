@@ -3,11 +3,10 @@ package org.example.aiassistantklawa.config;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import lombok.*;
-import org.hibernate.type.descriptor.jdbc.TimestampWithTimeZoneJdbcType;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import java.security.Timestamp;
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -15,10 +14,14 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 @MappedSuperclass
 public class BaseEntity {
-    @Column(name = "created_at", unique = true)
-    private Instant  createdAt;
-    @Column(name = "updated_at", unique = true)
-    private Instant  updatedAt;
-    @Column(name = "deleted_at", unique = true)
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private Instant updatedAt;
+
+    @Column(name = "deleted_at")
     private Instant deletedAt;
 }
