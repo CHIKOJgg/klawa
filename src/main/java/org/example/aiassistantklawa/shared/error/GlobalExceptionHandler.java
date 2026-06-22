@@ -1,15 +1,16 @@
     package org.example.aiassistantklawa.shared.error;
 
-    import jakarta.servlet.http.HttpServletRequest;
-    import lombok.extern.slf4j.Slf4j;
-    import org.springframework.data.crossstore.ChangeSetPersister;
-    import org.springframework.http.ResponseEntity;
-    import org.springframework.web.bind.MethodArgumentNotValidException;
-    import org.springframework.web.bind.annotation.ExceptionHandler;
-    import org.springframework.web.bind.annotation.RestControllerAdvice;
-    import org.springframework.web.client.HttpClientErrorException;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.server.ResponseStatusException;
 
-    import java.util.stream.Collectors;
+import java.util.stream.Collectors;
 
     @RestControllerAdvice
     @Slf4j
@@ -44,6 +45,13 @@
             return ResponseEntity
                     .status(400)
                     .body(ApiError.of(400,"VALIDATION_ERROR",fields,request.getRequestURI()));
+        }
+        @ExceptionHandler(ResponseStatusException.class)
+        public ResponseEntity<ApiError> handleResponseStatusException(ResponseStatusException e, HttpServletRequest request) {
+            log.warn("conflict: {}", e.getMessage());
+            return ResponseEntity
+                    .status(e.getStatusCode())
+                    .body(ApiError.of(e.getStatusCode().value(), "CONFLICT", e.getReason(), request.getRequestURI()));
         }
         @ExceptionHandler(Exception.class)
         public ResponseEntity<ApiError> handleAllException(Exception e, HttpServletRequest request) {

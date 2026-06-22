@@ -24,6 +24,7 @@ public class User extends BaseEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
+    @Column(unique = true)
     private String email;
     private String password;
     @Column(name = "first_name")

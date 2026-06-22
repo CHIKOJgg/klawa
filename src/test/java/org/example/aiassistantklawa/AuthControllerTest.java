@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 public class AuthControllerTest extends IntegrationTestBase{
     @Test
     void registerReturnsToken(){
-        var req = new RegisterRequest("Sara", "Black","sara@tse.com","2222");
+        var req = new RegisterRequest("Sara", "Black","sara.register@tse.com","2222");
         var resp = testRestTemplate.postForEntity("api/v1/auth/register", req, AuthenticationResponse.class);
         Assertions.assertNotNull(resp);
         Assertions.assertEquals(HttpStatus.OK, resp.getStatusCode());
@@ -20,7 +20,7 @@ public class AuthControllerTest extends IntegrationTestBase{
     @Test
     void duplicateEmailReturns409(){
         var req = new RegisterRequest("Sara", "Black","sara@tse.com","222");
-        testRestTemplate.postForEntity("api/v1/auth/register", req, Void.class);
+        testRestTemplate.postForEntity("/api/v1/auth/register", req, Void.class);
         var resp = testRestTemplate.postForEntity("api/v1/auth/register", req, Void.class);
         Assertions.assertNotNull(resp);
         Assertions.assertEquals(HttpStatus.CONFLICT, resp.getStatusCode());
