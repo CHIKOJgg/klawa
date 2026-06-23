@@ -7,11 +7,12 @@ import org.example.aiassistantklawa.config.JwtService;
 import org.example.aiassistantklawa.user.domain.Role;
 import org.example.aiassistantklawa.user.domain.User;
 import org.example.aiassistantklawa.user.infrastructure.UserRepository;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +23,10 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     @Transactional
     public AuthenticationResponse register( RegisterRequest request) {
-           var user = User.builder()
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
+        }
+        var user = User.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .email(request.getEmail())
