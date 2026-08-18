@@ -1,6 +1,8 @@
 # 🤖 AI Assistant Klawa
 
-**Personal AI assistant for task management** with Telegram integration and Claude AI support.
+**Personal AI assistant for task management** — a Spring Boot 4 modular monolith with Telegram integration, Claude AI chat, smart reminders, and productivity analytics.
+
+> **Status:** 🚧 Work in progress. Core infrastructure (auth, database, Docker, integration tests) is complete; several features are still being implemented.
 
 ---
 
@@ -15,6 +17,7 @@
 - [Telegram Bot](#-telegram-bot)
 - [Testing](#-testing)
 - [Project Status](#-project-status)
+- [Contributing](#-contributing)
 
 ---
 
@@ -22,39 +25,39 @@
 
 ### 🗂️ Task & Project Management
 - CRUD for tasks and projects
-- Soft delete support
-- Status model: `OPEN → IN_PROGRESS → COMPLETED | ARCHIVED`
+- Soft delete support (`deleted_at`)
+- Task status state machine: `OPEN → IN_PROGRESS → COMPLETED | ARCHIVED`
 - Priority levels: `LOW`, `MEDIUM`, `HIGH`, `URGENT`
-- Hierarchy: project → tasks → subtasks
+- Hierarchy: project → tasks
 
 ### 🤖 AI Chat with Claude
-- Anthropic Claude API integration
-- Conversation history with context
-- Personalization based on user memory
-- Automatic task creation from dialogue
+- Anthropic Claude API integration (configured; chat wiring in progress)
+- Conversation history with context (`conversation` / `message` tables)
+- Personalization based on user memory (`memory_entry`)
+- Automatic task creation from dialogue (planned)
 
 ### ⏰ Smart Reminders
-- Scheduled reminder planner
-- Domain Events for notifications
-- Statuses: `OPEN`, `IN_PROGRESS`, `COMPLETED`, `ARCHIVED`
+- Scheduled reminder planner (`reminder` table with partial index on `trigger_time`)
+- Domain Events for notifications via Spring Modulith
+- Statuses: `PENDING`, `SENT`, `FAILED`
 - Automatic notification on trigger
 
 ### 📊 Productivity Analytics
 - JPQL aggregations on tasks
 - Project completion statistics
-- Metrics via Actuator + Prometheus
+- Metrics via Actuator + Prometheus (`micrometer-registry-prometheus`)
 
 ### 🔐 JWT Authentication
 - Registration / Login / Refresh Token
-- Roles: `ADMIN`, `USER`
-- Access + Refresh tokens
+- Roles: `ROLE_USER`, `ROLE_ADMIN`
+- Access + Refresh tokens (refresh token entity present; rotation logic in progress)
 - BCrypt PasswordEncoder
 
 ### 📱 Telegram Bot
 - Link Telegram account to user
 - One-time binding code (deep-link)
 - Inline keyboards and commands
-- Webhook architecture
+- Webhook architecture (bot token configured; webhook handler in progress)
 
 ---
 
@@ -66,11 +69,11 @@
 | **Framework** | Spring Boot | 4.0.6 |
 | **Security** | Spring Security + JWT (jjwt) | 0.13.0 |
 | **ORM** | Spring Data JPA / Hibernate | — |
-| **Database** | PostgreSQL | 17 |
+| **Database** | PostgreSQL | 17 (Docker) / 16 (Testcontainers) |
 | **Migrations** | Flyway | — |
-| **AI API** | Anthropic Claude | claude-sonnet-4 |
+| **AI API** | Anthropic Claude | claude-sonnet-4-20250514 |
 | **Modularity** | Spring Modulith | 2.0.6 |
-| **Monitoring** | Spring Actuator + Micrometer | 1.17.0 |
+| **Monitoring** | Spring Actuator + Micrometer Prometheus | 1.17.0 |
 | **Validation** | Spring Boot Starter Validation | — |
 | **Build** | Maven Wrapper | — |
 | **Containers** | Docker / Docker Compose | — |
@@ -80,16 +83,20 @@
 
 ## 🏗️ Architecture
 
-The project is built as a **modular monolith** (Spring Modulith) with clear module separation:
+The project is built as a **modular monolith** using Spring Modulith 2.0.6. Modules are declared via `@ApplicationModule(type = OPEN)` on `package-info.java`.
 
 ```
 src/main/java/org/example/aiassistantklawa/
-├── config/                  # Shared config (Security, JWT, Auditing)
+├── config/                  # Shared config (Security, JWT, Auditing, BaseEntity)
 ├── user/                    # Users + Auth
-│   ├── api/                 #  - AuthController
-│   ├── domain/              #  - User, Role, RefreshToken
-│   └── infrastructure/      #  - UserRepository
-├── task/                    # Task management
+│   ├── api/                 # AuthController, AuthService, UserController
+│   ├── domain/              # User, Role, RefreshToken
+│   └── infrastructure/      # UserRepository, UserService
+├── task/                    # Task & Project management
+│   ├── api/                 # TaskController, ProjectsController
+│   ├── domain/              # Task, Project, TaskStatus, TaskPriority
+│   ├── application/usecase/ # SendRequestUseCase, GetRequestUseCase
+│   └── infrastructure/      # ProcessingRequestService, RecordRepository
 ├── reminder/                # Reminders + Scheduler
 ├── notification/            # Notifications
 ├── memory/                  # AI chat, messages, memory
@@ -97,27 +104,30 @@ src/main/java/org/example/aiassistantklawa/
 ├── telegram/                # Telegram Bot
 ├── analytics/               # Analytics
 ├── health/                  # Health checks & metrics
-└── shared/                  # Shared components (error handling)
+├── shared/                  # Shared components (error handling, request ID filter)
+└── exception/               # Error response models
 ```
 
 ### Module layers
 - **`api/`** — REST controllers, DTOs (requests/responses)
 - **`domain/`** — JPA entities, Value Objects, Domain Events, business logic
 - **`infrastructure/`** — Repositories, external service integrations
+- **`application/`** — Use cases
+
+### Declared Spring Modulith modules
+`@ApplicationModule(type = OPEN)` is declared on: `agent`, `user`, `reminder`, `task`, `shared`. Other packages (`config`, `memory`, `notification`, `telegram`, `analytics`, `health`, `exception`) are not yet declared as modules — see [Project Status](#-project-status).
 
 ### Flyway migrations
 ```
-V1  → create_users_table
-V2  → create_tasks_table
-V3  → create_projects_table
-V4  → create_reminders_table
-V5  → create_telegram_accounts
-V6  → create_requests
-V7  → create_notifications
-V8  → create_chat_message
-V9  → create_memory
-V10 → create_tasks_tasks
+V0__init_tables.sql          → Full schema: users, refresh_token, projects, tasks,
+                                reminders, notifications, conversations, messages,
+                                memory_entry, telegram_account (179 lines, all enums + indexes)
+V1–V4                        → Empty placeholder files
+V5__event_publication_table.sql → Spring Modulith event_publication table
+V6–V7                        → Columns added to event_publication
 ```
+
+> **Note:** All real schema lives in `V0`. Migrations `V1`–`V4` are empty. The Modulith `event_publication` table is created by `V5` and extended by `V6`–`V7` (also auto-created by `spring.modulith.events.jdbc.schema-initialization`).
 
 ---
 
@@ -127,13 +137,13 @@ V10 → create_tasks_tasks
 
 - **Java 25** (JDK)
 - **Docker** and **Docker Compose**
-- **PostgreSQL** (if running without Docker)
+- **PostgreSQL** (only if running without Docker)
 
 ### Quick start
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/your-repo/ai-assistant-klawa.git
+git clone https://github.com/CHIKOJgg/klawa.git
 cd ai-assistant-klawa
 
 # 2. Configure environment variables
@@ -155,16 +165,28 @@ docker-compose up -d
 docker-compose up --build
 ```
 
+This starts the app, PostgreSQL 17, and Redis. The app builds from `eclipse-temurin:25-jdk` and runs on `eclipse-temurin:25-jre`.
+
 ---
 
 ## 🔧 Configuration
 
+Configuration is profile-driven:
+
+| Profile | File | Purpose |
+|---------|------|---------|
+| `dev` | `application-dev.yaml` | Debug logs, formatted SQL, console trace-id pattern |
+| `prod` | `application-prod.yaml` | Warn-level logs, SQL hidden |
+| `test` | `application-test.yaml` | Flyway disabled, Hibernate `create-drop`, Testcontainers |
+
+### Environment variables
+
 | Variable | Purpose | Default |
 |----------|---------|---------|
-| `DB_URL` | PostgreSQL JDBC URL | `jdbc:postgresql://localhost:5432/klawa` |
-| `DB_USERNAME` | Database user | `klawa_user` |
-| `DB_PASSWORD` | Database password | `changeme` |
-| `JWT_SECRET` | JWT signing key (256-bit) | — |
+| `DB_URL` | PostgreSQL JDBC URL | — (required) |
+| `DB_USERNAME` | Database user | `postgres` |
+| `DB_PASSWORD` | Database password | — (required) |
+| `JWT_SECRET` | JWT signing key (256-bit) | — (required) |
 | `JWT_EXPIRATION` | JWT lifetime in ms | `900000` (15 min) |
 | `ANTHROPIC_API_KEY` | Anthropic Claude API key | — |
 | `ANTHROPIC_MODEL` | Claude model | `claude-sonnet-4-20250514` |
@@ -172,14 +194,14 @@ docker-compose up --build
 | `TELEGRAM_WEBHOOK_URL` | Telegram webhook URL | — |
 | `SPRING_PROFILES_ACTIVE` | Active profile | `dev` |
 
-**Profiles:**
-- `dev` — development (debug logs, formatted SQL)
-- `prod` — production (warn logs)
-- `test` — Flyway disabled, DDL auto-create
+### Actuator endpoints
+All web endpoints are exposed except `env`, `beans`, `threaddump`. Health details always shown. Prometheus metrics available at `/actuator/prometheus`. All `/actuator/**` requests are permitted.
 
 ---
 
 ## 📡 API Endpoints
+
+All endpoints are prefixed with `/api/v1`.
 
 ### Auth (`/api/v1/auth`)
 | Method | Path | Description |
@@ -197,13 +219,15 @@ docker-compose up --build
 | `DELETE` | `/{id}` | Delete task |
 
 ### Projects, Reminders, Notifications, Memories, Agent, Analytics, Telegram
-Similar CRUD endpoints under `/api/v1/projects`, `/api/v1/reminders`, etc.
+Similar CRUD endpoints under `/api/v1/projects`, `/api/v1/reminders`, `/api/v1/notifications`, `/api/v1/memory`, `/api/v1/agent`, `/api/v1/analytics`, `/api/v1/telegram`.
 
 ### System
 | Method | Path | Description |
 |--------|------|-------------|
 | `GET` | `/api/v1/system/health` | Health check |
 | `GET` | `/api/v1/system/metrics` | System metrics |
+
+> **Note:** OpenAPI / Swagger is not yet integrated. Endpoint details are documented here manually.
 
 ---
 
@@ -229,24 +253,46 @@ Link your Telegram account to a user:
 ./mvnw test -Dtest=AuthControllerTest
 ```
 
-Test database: PostgreSQL 16 (alpine) via Testcontainers, Hibernate DDL: `create-drop`
+Test database: PostgreSQL 16 (alpine) via Testcontainers, Hibernate DDL: `create-drop`.
+
+Tests included:
+- `AiAssistantKlawaApplicationTests` — Spring Modulith structure verification
+- `AuthControllerTest` — registration + duplicate-email 409 handling
+- `UserRepositoryTest` — Testcontainers JPA base setup
 
 ---
 
 ## 📊 Project Status
 
-- [x] Authentication (register/login, JWT, refresh token)
+- [x] Authentication (register/login, JWT, refresh token entity)
 - [x] Global exception handling with trace IDs
-- [x] PostgreSQL schema (Flyway, 10 migrations)
+- [x] PostgreSQL schema (Flyway, V0 full schema + Modulith event table)
 - [x] Integration tests (Testcontainers)
+- [x] Docker / Docker Compose (app + PostgreSQL 17 + Redis)
+- [x] Actuator + Prometheus metrics
+- [x] Spring Modulith structure verification test
 - [ ] Task/Project CRUD with state machine
-- [ ] AI chat with Claude
-- [ ] Reminders + Notifications
-- [ ] Telegram bot webhook
-- [ ] Analytics
+- [ ] AI chat with Claude (configured, not yet wired)
+- [ ] Reminders + Notifications (scheduler)
+- [ ] Telegram bot webhook handler
+- [ ] Analytics endpoints
+- [ ] Refresh token rotation logic
+- [ ] Redis integration (configured in compose, no dependency yet)
 - [ ] Rate limiting, caching, Circuit Breaker
 - [ ] OpenAPI / Swagger
 - [ ] CI/CD pipeline
+- [ ] Declared `@ApplicationModule` on all packages
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`feature/my-feature`)
+3. Commit your changes
+4. Open a pull request
+
+Please ensure `./mvnw test` passes before submitting.
 
 ---
 
