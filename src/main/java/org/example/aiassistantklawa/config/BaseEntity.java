@@ -14,6 +14,7 @@ import java.time.Instant;
 @RequiredArgsConstructor
 @MappedSuperclass
 public class BaseEntity {
+    //base entity
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;

@@ -1,0 +1,15 @@
+{
+  "name": "ai-assistant-klawa",
+  "version": "1.0.0",
+  "description": "**Personal AI assistant for task management** with Telegram integration and Claude AI support.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@modelcontextprotocol/server-github": "^2025.4.8"
+  }
+}
