@@ -1,4 +1,8 @@
 HELP.md
+klawa-jira-calendar.ics
+INTERVIEW_PROJECT_QUESTIONS.md
+ROADMAP_FINAL_2_MONTHS.md
+REAL_WORK_JIRA.md
 target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
