@@ -1,7 +1,44 @@
 spring:
+  modulith:
+    events:
+      jdbc:
+        schema-initialization:
+          enabled: true
+          mode: always
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
   jpa:
-    show-sql: false
-logging:
-  level:
-    root: WARN
-    org.example.aiassistantklawa: INFO
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+        exclude: "env,beans,threaddump"
+  endpoint:
+    health:
+      show-details: always
+#  datadog:
+#    metrics:
+#      export:
+#        api-key: ""
+server:
+  port: 8088
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION}
