@@ -1,0 +1,1155 @@
+{
+  "configuration" : {
+    "scope" : "SoftwareSystem"
+  },
+  "description" : "Персональный AI-ассистент для управления задачами",
+  "documentation" : { },
+  "id" : 1,
+  "lastModifiedDate" : "2026-09-11T17:10:25Z",
+  "model" : {
+    "deploymentNodes" : [ {
+      "children" : [ {
+        "containerInstances" : [ {
+          "containerId" : "16",
+          "environment" : "Local Development",
+          "id" : "56",
+          "instanceId" : 1,
+          "properties" : {
+            "structurizr.dsl.identifier" : "5949875d-b92e-4733-ac4a-5c755429e844"
+          },
+          "tags" : "Container Instance"
+        }, {
+          "containerId" : "17",
+          "environment" : "Local Development",
+          "id" : "57",
+          "instanceId" : 1,
+          "properties" : {
+            "structurizr.dsl.identifier" : "9799680d-151d-4432-82ef-fb6b13414a95"
+          },
+          "tags" : "Container Instance"
+        } ],
+        "environment" : "Local Development",
+        "id" : "55",
+        "instances" : "1",
+        "name" : "Docker Desktop",
+        "properties" : {
+          "structurizr.dsl.identifier" : "cffe7b5f-1717-4eda-9267-27097c6c593d"
+        },
+        "tags" : "Element,Deployment Node",
+        "technology" : "Docker"
+      }, {
+        "containerInstances" : [ {
+          "containerId" : "6",
+          "environment" : "Local Development",
+          "id" : "59",
+          "instanceId" : 1,
+          "properties" : {
+            "structurizr.dsl.identifier" : "24d42d42-b512-434d-b193-a13ba696c5e2"
+          },
+          "relationships" : [ {
+            "description" : "Читает и пишет данные",
+            "destinationId" : "56",
+            "id" : "60",
+            "linkedRelationshipId" : "23",
+            "sourceId" : "59",
+            "technology" : "JDBC"
+          }, {
+            "description" : "Кэширует, очереди",
+            "destinationId" : "57",
+            "id" : "61",
+            "linkedRelationshipId" : "24",
+            "sourceId" : "59",
+            "technology" : "Redis Protocol"
+          } ],
+          "tags" : "Container Instance"
+        } ],
+        "environment" : "Local Development",
+        "id" : "58",
+        "instances" : "1",
+        "name" : "JVM",
+        "properties" : {
+          "structurizr.dsl.identifier" : "1b18846f-1017-4a94-ae71-5f602ee640d5"
+        },
+        "tags" : "Element,Deployment Node",
+        "technology" : "Java 25"
+      }, {
+        "containerInstances" : [ {
+          "containerId" : "5",
+          "environment" : "Local Development",
+          "id" : "63",
+          "instanceId" : 1,
+          "properties" : {
+            "structurizr.dsl.identifier" : "ab8d70c7-9c2e-4088-9f49-2bf9c7b6d2b6"
+          },
+          "relationships" : [ {
+            "description" : "REST API запросы",
+            "destinationId" : "59",
+            "id" : "64",
+            "linkedRelationshipId" : "22",
+            "sourceId" : "63",
+            "technology" : "HTTPS / JSON"
+          } ],
+          "tags" : "Container Instance"
+        } ],
+        "environment" : "Local Development",
+        "id" : "62",
+        "instances" : "1",
+        "name" : "Node.js",
+        "properties" : {
+          "structurizr.dsl.identifier" : "c1dc6758-5a61-4b75-9843-6a692aa2249b"
+        },
+        "tags" : "Element,Deployment Node",
+        "technology" : "Vite Dev Server"
+      } ],
+      "environment" : "Local Development",
+      "id" : "54",
+      "instances" : "1",
+      "name" : "Developer Laptop",
+      "properties" : {
+        "structurizr.dsl.identifier" : "2a7c9a06-6a03-41c8-86c9-5459ff4bc368"
+      },
+      "tags" : "Element,Deployment Node",
+      "technology" : "Windows 11"
+    } ],
+    "people" : [ {
+      "description" : "Управляет задачами, общается с AI-ассистентом",
+      "id" : "1",
+      "name" : "Пользователь",
+      "properties" : {
+        "structurizr.dsl.identifier" : "user"
+      },
+      "relationships" : [ {
+        "description" : "Использует",
+        "destinationId" : "4",
+        "id" : "18",
+        "sourceId" : "1",
+        "tags" : "Relationship",
+        "technology" : "HTTPS, Telegram"
+      }, {
+        "description" : "Открывает в браузере",
+        "destinationId" : "5",
+        "id" : "21",
+        "sourceId" : "1",
+        "tags" : "Relationship",
+        "technology" : "HTTPS"
+      } ],
+      "tags" : "Element,Person"
+    } ],
+    "softwareSystems" : [ {
+      "description" : "Внешний AI-провайдер",
+      "documentation" : { },
+      "id" : "2",
+      "name" : "Anthropic Claude API",
+      "properties" : {
+        "structurizr.dsl.identifier" : "claudeApi"
+      },
+      "tags" : "Element,Software System,External"
+    }, {
+      "description" : "Мессенджер для уведомлений",
+      "documentation" : { },
+      "id" : "3",
+      "name" : "Telegram Bot API",
+      "properties" : {
+        "structurizr.dsl.identifier" : "telegramApi"
+      },
+      "tags" : "Element,Software System,External"
+    }, {
+      "containers" : [ {
+        "description" : "Пользовательский интерфейс",
+        "documentation" : { },
+        "id" : "5",
+        "name" : "React SPA",
+        "properties" : {
+          "structurizr.dsl.identifier" : "spa"
+        },
+        "relationships" : [ {
+          "description" : "REST API запросы",
+          "destinationId" : "6",
+          "id" : "22",
+          "sourceId" : "5",
+          "tags" : "Relationship",
+          "technology" : "HTTPS / JSON"
+        }, {
+          "description" : "Регистрация, логин, /auth/*",
+          "destinationId" : "7",
+          "id" : "25",
+          "sourceId" : "5",
+          "tags" : "Relationship"
+        }, {
+          "description" : "CRUD задач, /tasks/*",
+          "destinationId" : "8",
+          "id" : "26",
+          "sourceId" : "5",
+          "tags" : "Relationship"
+        }, {
+          "description" : "CRUD проектов, /projects/*",
+          "destinationId" : "9",
+          "id" : "27",
+          "sourceId" : "5",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Напоминания, /reminders/*",
+          "destinationId" : "10",
+          "id" : "28",
+          "sourceId" : "5",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Уведомления, /notifications/*",
+          "destinationId" : "11",
+          "id" : "29",
+          "sourceId" : "5",
+          "tags" : "Relationship"
+        }, {
+          "description" : "AI-чат, /agent/*",
+          "destinationId" : "12",
+          "id" : "30",
+          "sourceId" : "5",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Память, /memories/*",
+          "destinationId" : "13",
+          "id" : "31",
+          "sourceId" : "5",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Статистика, /analytics/*",
+          "destinationId" : "15",
+          "id" : "32",
+          "sourceId" : "5",
+          "tags" : "Relationship"
+        } ],
+        "tags" : "Element,Container,Frontend",
+        "technology" : "React 19, TypeScript, Vite, Tailwind"
+      }, {
+        "components" : [ {
+          "description" : "Регистрация, JWT-аутентификация, профиль",
+          "documentation" : { },
+          "id" : "7",
+          "name" : "User Module",
+          "properties" : {
+            "structurizr.dsl.identifier" : "userModule"
+          },
+          "relationships" : [ {
+            "description" : "Читает/пишет",
+            "destinationId" : "16",
+            "id" : "45",
+            "sourceId" : "7",
+            "tags" : "Relationship",
+            "technology" : "JDBC"
+          } ],
+          "tags" : "Element,Component"
+        }, {
+          "description" : "CRUD задач, state machine статусов",
+          "documentation" : { },
+          "id" : "8",
+          "name" : "Task Module",
+          "properties" : {
+            "structurizr.dsl.identifier" : "taskModule"
+          },
+          "relationships" : [ {
+            "description" : "Проверяет существование проекта",
+            "destinationId" : "9",
+            "id" : "33",
+            "sourceId" : "8",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Читает/пишет",
+            "destinationId" : "16",
+            "id" : "46",
+            "sourceId" : "8",
+            "tags" : "Relationship",
+            "technology" : "JDBC"
+          } ],
+          "tags" : "Element,Component"
+        }, {
+          "description" : "CRUD проектов, привязка задач к проекту",
+          "documentation" : { },
+          "id" : "9",
+          "name" : "Project Module",
+          "properties" : {
+            "structurizr.dsl.identifier" : "projectModule"
+          },
+          "relationships" : [ {
+            "description" : "Читает/пишет",
+            "destinationId" : "16",
+            "id" : "47",
+            "sourceId" : "9",
+            "tags" : "Relationship",
+            "technology" : "JDBC"
+          } ],
+          "tags" : "Element,Component"
+        }, {
+          "description" : "Создание напоминаний, scheduler проверки",
+          "documentation" : { },
+          "id" : "10",
+          "name" : "Reminder Module",
+          "properties" : {
+            "structurizr.dsl.identifier" : "reminderModule"
+          },
+          "relationships" : [ {
+            "description" : "Читает информацию о задаче",
+            "destinationId" : "8",
+            "id" : "34",
+            "sourceId" : "10",
+            "tags" : "Relationship"
+          }, {
+            "description" : "ReminderDueEvent",
+            "destinationId" : "11",
+            "id" : "39",
+            "sourceId" : "10",
+            "tags" : "Relationship",
+            "technology" : "Spring Event"
+          }, {
+            "description" : "Читает/пишет",
+            "destinationId" : "16",
+            "id" : "48",
+            "sourceId" : "10",
+            "tags" : "Relationship",
+            "technology" : "JDBC"
+          } ],
+          "tags" : "Element,Component"
+        }, {
+          "description" : "Уведомления: создание, доставка, mark as read",
+          "documentation" : { },
+          "id" : "11",
+          "name" : "Notification Module",
+          "properties" : {
+            "structurizr.dsl.identifier" : "notifModule"
+          },
+          "relationships" : [ {
+            "description" : "Отправить уведомление в Telegram",
+            "destinationId" : "14",
+            "id" : "40",
+            "sourceId" : "11",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Читает/пишет",
+            "destinationId" : "16",
+            "id" : "49",
+            "sourceId" : "11",
+            "tags" : "Relationship",
+            "technology" : "JDBC"
+          } ],
+          "tags" : "Element,Component"
+        }, {
+          "description" : "AI-чат: промпты, контекст, вызов Claude API",
+          "documentation" : { },
+          "id" : "12",
+          "name" : "Agent Module",
+          "properties" : {
+            "structurizr.dsl.identifier" : "agentModule"
+          },
+          "relationships" : [ {
+            "description" : "Читает/пишет контекст пользователя",
+            "destinationId" : "13",
+            "id" : "35",
+            "sourceId" : "12",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Создаёт задачу программно (tool_use)",
+            "destinationId" : "8",
+            "id" : "36",
+            "sourceId" : "12",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Вызывает AI",
+            "destinationId" : "2",
+            "id" : "41",
+            "sourceId" : "12",
+            "tags" : "Relationship",
+            "technology" : "HTTPS"
+          }, {
+            "description" : "Читает/пишет",
+            "destinationId" : "16",
+            "id" : "50",
+            "sourceId" : "12",
+            "tags" : "Relationship",
+            "technology" : "JDBC"
+          } ],
+          "tags" : "Element,Component"
+        }, {
+          "description" : "Долгосрочная память: факты о пользователе",
+          "documentation" : { },
+          "id" : "13",
+          "name" : "Memory Module",
+          "properties" : {
+            "structurizr.dsl.identifier" : "memoryModule"
+          },
+          "relationships" : [ {
+            "description" : "Читает/пишет",
+            "destinationId" : "16",
+            "id" : "51",
+            "sourceId" : "13",
+            "tags" : "Relationship",
+            "technology" : "JDBC"
+          } ],
+          "tags" : "Element,Component"
+        }, {
+          "description" : "Webhook, deep-linking, отправка сообщений",
+          "documentation" : { },
+          "id" : "14",
+          "name" : "Telegram Module",
+          "properties" : {
+            "structurizr.dsl.identifier" : "telegramModule"
+          },
+          "relationships" : [ {
+            "description" : "Привязывает Telegram-аккаунт",
+            "destinationId" : "7",
+            "id" : "38",
+            "sourceId" : "14",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Webhook, sendMessage",
+            "destinationId" : "3",
+            "id" : "43",
+            "sourceId" : "14",
+            "tags" : "Relationship",
+            "technology" : "HTTPS"
+          }, {
+            "description" : "Читает/пишет",
+            "destinationId" : "16",
+            "id" : "52",
+            "sourceId" : "14",
+            "tags" : "Relationship",
+            "technology" : "JDBC"
+          } ],
+          "tags" : "Element,Component"
+        }, {
+          "description" : "Агрегированная статистика по задачам",
+          "documentation" : { },
+          "id" : "15",
+          "name" : "Analytics Module",
+          "properties" : {
+            "structurizr.dsl.identifier" : "analyticsModule"
+          },
+          "relationships" : [ {
+            "description" : "Агрегирует данные по задачам",
+            "destinationId" : "8",
+            "id" : "37",
+            "sourceId" : "15",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Читает/пишет",
+            "destinationId" : "16",
+            "id" : "53",
+            "sourceId" : "15",
+            "tags" : "Relationship",
+            "technology" : "JDBC"
+          } ],
+          "tags" : "Element,Component"
+        } ],
+        "description" : "REST API + бизнес-логика",
+        "documentation" : { },
+        "id" : "6",
+        "name" : "Spring Boot API",
+        "properties" : {
+          "structurizr.dsl.identifier" : "api"
+        },
+        "relationships" : [ {
+          "description" : "Читает и пишет данные",
+          "destinationId" : "16",
+          "id" : "23",
+          "sourceId" : "6",
+          "tags" : "Relationship",
+          "technology" : "JDBC"
+        }, {
+          "description" : "Кэширует, очереди",
+          "destinationId" : "17",
+          "id" : "24",
+          "sourceId" : "6",
+          "tags" : "Relationship",
+          "technology" : "Redis Protocol"
+        }, {
+          "description" : "Вызывает AI",
+          "destinationId" : "2",
+          "id" : "42",
+          "linkedRelationshipId" : "41",
+          "sourceId" : "6",
+          "technology" : "HTTPS"
+        }, {
+          "description" : "Webhook, sendMessage",
+          "destinationId" : "3",
+          "id" : "44",
+          "linkedRelationshipId" : "43",
+          "sourceId" : "6",
+          "technology" : "HTTPS"
+        } ],
+        "tags" : "Element,Container",
+        "technology" : "Java 25, Spring Boot 4, Spring Modulith"
+      }, {
+        "description" : "Основное хранилище данных",
+        "documentation" : { },
+        "id" : "16",
+        "name" : "PostgreSQL",
+        "properties" : {
+          "structurizr.dsl.identifier" : "db"
+        },
+        "tags" : "Element,Container,Database",
+        "technology" : "PostgreSQL 17"
+      }, {
+        "description" : "Кэш, очереди событий",
+        "documentation" : { },
+        "id" : "17",
+        "name" : "Redis",
+        "properties" : {
+          "structurizr.dsl.identifier" : "cache"
+        },
+        "tags" : "Element,Container,Database",
+        "technology" : "Redis"
+      } ],
+      "description" : "Персональный AI-ассистент: задачи, напоминания, AI-чат, аналитика",
+      "documentation" : { },
+      "id" : "4",
+      "name" : "Klawa",
+      "properties" : {
+        "structurizr.dsl.identifier" : "klawa"
+      },
+      "relationships" : [ {
+        "description" : "Отправляет промпты, получает ответы",
+        "destinationId" : "2",
+        "id" : "19",
+        "sourceId" : "4",
+        "tags" : "Relationship",
+        "technology" : "HTTPS"
+      }, {
+        "description" : "Отправляет/принимает сообщения",
+        "destinationId" : "3",
+        "id" : "20",
+        "sourceId" : "4",
+        "tags" : "Relationship",
+        "technology" : "HTTPS"
+      } ],
+      "tags" : "Element,Software System"
+    } ]
+  },
+  "name" : "Klawa",
+  "properties" : {
+    "structurizr.inspection.error" : "21",
+    "structurizr.dsl" : "d29ya3NwYWNlICJLbGF3YSIgItCf0LXRgNGB0L7QvdCw0LvRjNC90YvQuSBBSS3QsNGB0YHQuNGB0YLQtdC90YIg0LTQu9GPINGD0L/RgNCw0LLQu9C10L3QuNGPINC30LDQtNCw0YfQsNC80LgiIHsKCiAgICBtb2RlbCB7CiAgICAgICAgLy8g4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQINCQ0JrQotCe0KDQqyDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZAKICAgICAgICB1c2VyID0gcGVyc29uICLQn9C+0LvRjNC30L7QstCw0YLQtdC70YwiICLQo9C/0YDQsNCy0LvRj9C10YIg0LfQsNC00LDRh9Cw0LzQuCwg0L7QsdGJ0LDQtdGC0YHRjyDRgSBBSS3QsNGB0YHQuNGB0YLQtdC90YLQvtC8IgoKICAgICAgICAvLyDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZAg0JLQndCV0KjQndCY0JUg0KHQmNCh0KLQldCc0Ksg4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQCiAgICAgICAgY2xhdWRlQXBpID0gc29mdHdhcmVTeXN0ZW0gIkFudGhyb3BpYyBDbGF1ZGUgQVBJIiAi0JLQvdC10YjQvdC40LkgQUkt0L/RgNC+0LLQsNC50LTQtdGAIiB7CiAgICAgICAgICAgIHRhZ3MgIkV4dGVybmFsIgogICAgICAgIH0KICAgICAgICB0ZWxlZ3JhbUFwaSA9IHNvZnR3YXJlU3lzdGVtICJUZWxlZ3JhbSBCb3QgQVBJIiAi0JzQtdGB0YHQtdC90LTQttC10YAg0LTQu9GPINGD0LLQtdC00L7QvNC70LXQvdC40LkiIHsKICAgICAgICAgICAgdGFncyAiRXh0ZXJuYWwiCiAgICAgICAgfQoKICAgICAgICAvLyDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZAgS0xBV0Eg4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQCiAgICAgICAga2xhd2EgPSBzb2Z0d2FyZVN5c3RlbSAiS2xhd2EiICLQn9C10YDRgdC+0L3QsNC70YzQvdGL0LkgQUkt0LDRgdGB0LjRgdGC0LXQvdGCOiDQt9Cw0LTQsNGH0LgsINC90LDQv9C+0LzQuNC90LDQvdC40Y8sIEFJLdGH0LDRgiwg0LDQvdCw0LvQuNGC0LjQutCwIiB7CgogICAgICAgICAgICAvLyAtLS0g0JrQvtC90YLQtdC50L3QtdGA0YsgLS0tCiAgICAgICAgICAgIHNwYSA9IGNvbnRhaW5lciAiUmVhY3QgU1BBIiAi0J/QvtC70YzQt9C+0LLQsNGC0LXQu9GM0YHQutC40Lkg0LjQvdGC0LXRgNGE0LXQudGBIiAiUmVhY3QgMTksIFR5cGVTY3JpcHQsIFZpdGUsIFRhaWx3aW5kIiB7CiAgICAgICAgICAgICAgICB0YWdzICJGcm9udGVuZCIKICAgICAgICAgICAgfQoKICAgICAgICAgICAgYXBpID0gY29udGFpbmVyICJTcHJpbmcgQm9vdCBBUEkiICJSRVNUIEFQSSArINCx0LjQt9C90LXRgS3Qu9C+0LPQuNC60LAiICJKYXZhIDI1LCBTcHJpbmcgQm9vdCA0LCBTcHJpbmcgTW9kdWxpdGgiIHsKCiAgICAgICAgICAgICAgICAvLyAtLS0g0JrQvtC80L/QvtC90LXQvdGC0YsgKNC80L7QtNGD0LvQuCkgLS0tCiAgICAgICAgICAgICAgICB1c2VyTW9kdWxlICAgICAgPSBjb21wb25lbnQgIlVzZXIgTW9kdWxlIiAgICAgICAgICLQoNC10LPQuNGB0YLRgNCw0YbQuNGPLCBKV1Qt0LDRg9GC0LXQvdGC0LjRhNC40LrQsNGG0LjRjywg0L/RgNC+0YTQuNC70YwiCiAgICAgICAgICAgICAgICB0YXNrTW9kdWxlICAgICAgPSBjb21wb25lbnQgIlRhc2sgTW9kdWxlIiAgICAgICAgICJDUlVEINC30LDQtNCw0YcsIHN0YXRlIG1hY2hpbmUg0YHRgtCw0YLRg9GB0L7QsiIKICAgICAgICAgICAgICAgIHByb2plY3RNb2R1bGUgICA9IGNvbXBvbmVudCAiUHJvamVjdCBNb2R1bGUiICAgICAgIkNSVUQg0L/RgNC+0LXQutGC0L7Qsiwg0L/RgNC40LLRj9C30LrQsCDQt9Cw0LTQsNGHINC6INC/0YDQvtC10LrRgtGDIgogICAgICAgICAgICAgICAgcmVtaW5kZXJNb2R1bGUgID0gY29tcG9uZW50ICJSZW1pbmRlciBNb2R1bGUiICAgICAi0KHQvtC30LTQsNC90LjQtSDQvdCw0L/QvtC80LjQvdCw0L3QuNC5LCBzY2hlZHVsZXIg0L/RgNC+0LLQtdGA0LrQuCIKICAgICAgICAgICAgICAgIG5vdGlmTW9kdWxlICAgICA9IGNvbXBvbmVudCAiTm90aWZpY2F0aW9uIE1vZHVsZSIgItCj0LLQtdC00L7QvNC70LXQvdC40Y86INGB0L7Qt9C00LDQvdC40LUsINC00L7RgdGC0LDQstC60LAsIG1hcmsgYXMgcmVhZCIKICAgICAgICAgICAgICAgIGFnZW50TW9kdWxlICAgICA9IGNvbXBvbmVudCAiQWdlbnQgTW9kdWxlIiAgICAgICAgIkFJLdGH0LDRgjog0L/RgNC+0LzQv9GC0YssINC60L7QvdGC0LXQutGB0YIsINCy0YvQt9C+0LIgQ2xhdWRlIEFQSSIKICAgICAgICAgICAgICAgIG1lbW9yeU1vZHVsZSAgICA9IGNvbXBvbmVudCAiTWVtb3J5IE1vZHVsZSIgICAgICAgItCU0L7Qu9Cz0L7RgdGA0L7Rh9C90LDRjyDQv9Cw0LzRj9GC0Yw6INGE0LDQutGC0Ysg0L4g0L/QvtC70YzQt9C+0LLQsNGC0LXQu9C1IgogICAgICAgICAgICAgICAgdGVsZWdyYW1Nb2R1bGUgID0gY29tcG9uZW50ICJUZWxlZ3JhbSBNb2R1bGUiICAgICAiV2ViaG9vaywgZGVlcC1saW5raW5nLCDQvtGC0L/RgNCw0LLQutCwINGB0L7QvtCx0YnQtdC90LjQuSIKICAgICAgICAgICAgICAgIGFuYWx5dGljc01vZHVsZSA9IGNvbXBvbmVudCAiQW5hbHl0aWNzIE1vZHVsZSIgICAgItCQ0LPRgNC10LPQuNGA0L7QstCw0L3QvdCw0Y8g0YHRgtCw0YLQuNGB0YLQuNC60LAg0L/QviDQt9Cw0LTQsNGH0LDQvCIKICAgICAgICAgICAgfQoKICAgICAgICAgICAgZGIgPSBjb250YWluZXIgIlBvc3RncmVTUUwiICLQntGB0L3QvtCy0L3QvtC1INGF0YDQsNC90LjQu9C40YnQtSDQtNCw0L3QvdGL0YUiICJQb3N0Z3JlU1FMIDE3IiB7CiAgICAgICAgICAgICAgICB0YWdzICJEYXRhYmFzZSIKICAgICAgICAgICAgfQoKICAgICAgICAgICAgY2FjaGUgPSBjb250YWluZXIgIlJlZGlzIiAi0JrRjdGILCDQvtGH0LXRgNC10LTQuCDRgdC+0LHRi9GC0LjQuSIgIlJlZGlzIiB7CiAgICAgICAgICAgICAgICB0YWdzICJEYXRhYmFzZSIKICAgICAgICAgICAgfQogICAgICAgIH0KCiAgICAgICAgLy8g4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQINCh0JLQr9CX0Jg6IFN5c3RlbSBDb250ZXh0IOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkAogICAgICAgIHVzZXIgLT4ga2xhd2EgItCY0YHQv9C+0LvRjNC30YPQtdGCIiAiSFRUUFMsIFRlbGVncmFtIgogICAgICAgIGtsYXdhIC0+IGNsYXVkZUFwaSAi0J7RgtC/0YDQsNCy0LvRj9C10YIg0L/RgNC+0LzQv9GC0YssINC/0L7Qu9GD0YfQsNC10YIg0L7RgtCy0LXRgtGLIiAiSFRUUFMiCiAgICAgICAga2xhd2EgLT4gdGVsZWdyYW1BcGkgItCe0YLQv9GA0LDQstC70Y/QtdGCL9C/0YDQuNC90LjQvNCw0LXRgiDRgdC+0L7QsdGJ0LXQvdC40Y8iICJIVFRQUyIKCiAgICAgICAgLy8g4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQINCh0JLQr9CX0Jg6IENvbnRhaW5lciDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZAKICAgICAgICB1c2VyIC0+IHNwYSAi0J7RgtC60YDRi9Cy0LDQtdGCINCyINCx0YDQsNGD0LfQtdGA0LUiICJIVFRQUyIKICAgICAgICBzcGEgLT4gYXBpICJSRVNUIEFQSSDQt9Cw0L/RgNC+0YHRiyIgIkhUVFBTIC8gSlNPTiIKICAgICAgICBhcGkgLT4gZGIgItCn0LjRgtCw0LXRgiDQuCDQv9C40YjQtdGCINC00LDQvdC90YvQtSIgIkpEQkMiCiAgICAgICAgYXBpIC0+IGNhY2hlICLQmtGN0YjQuNGA0YPQtdGCLCDQvtGH0LXRgNC10LTQuCIgIlJlZGlzIFByb3RvY29sIgoKICAgICAgICAvLyDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZAg0KHQktCv0JfQmDogQ29tcG9uZW50IOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkAoKICAgICAgICAvLyBTUEEg4oaSINC80L7QtNGD0LvQuCAo0YfQtdGA0LXQtyBSRVNUINC60L7QvdGC0YDQvtC70LvQtdGA0YspCiAgICAgICAgc3BhIC0+IHVzZXJNb2R1bGUgItCg0LXQs9C40YHRgtGA0LDRhtC40Y8sINC70L7Qs9C40L0sIC9hdXRoLyoiCiAgICAgICAgc3BhIC0+IHRhc2tNb2R1bGUgIkNSVUQg0LfQsNC00LDRhywgL3Rhc2tzLyoiCiAgICAgICAgc3BhIC0+IHByb2plY3RNb2R1bGUgIkNSVUQg0L/RgNC+0LXQutGC0L7QsiwgL3Byb2plY3RzLyoiCiAgICAgICAgc3BhIC0+IHJlbWluZGVyTW9kdWxlICLQndCw0L/QvtC80LjQvdCw0L3QuNGPLCAvcmVtaW5kZXJzLyoiCiAgICAgICAgc3BhIC0+IG5vdGlmTW9kdWxlICLQo9Cy0LXQtNC+0LzQu9C10L3QuNGPLCAvbm90aWZpY2F0aW9ucy8qIgogICAgICAgIHNwYSAtPiBhZ2VudE1vZHVsZSAiQUkt0YfQsNGCLCAvYWdlbnQvKiIKICAgICAgICBzcGEgLT4gbWVtb3J5TW9kdWxlICLQn9Cw0LzRj9GC0YwsIC9tZW1vcmllcy8qIgogICAgICAgIHNwYSAtPiBhbmFseXRpY3NNb2R1bGUgItCh0YLQsNGC0LjRgdGC0LjQutCwLCAvYW5hbHl0aWNzLyoiCgogICAgICAgIC8vINCc0L7QtNGD0LvRjCDihpIg0JzQvtC00YPQu9GMICjRgdC40L3RhdGA0L7QvdC90YvQtSDQstGL0LfQvtCy0YspCiAgICAgICAgdGFza01vZHVsZSAtPiBwcm9qZWN0TW9kdWxlICLQn9GA0L7QstC10YDRj9C10YIg0YHRg9GJ0LXRgdGC0LLQvtCy0LDQvdC40LUg0L/RgNC+0LXQutGC0LAiCiAgICAgICAgcmVtaW5kZXJNb2R1bGUgLT4gdGFza01vZHVsZSAi0KfQuNGC0LDQtdGCINC40L3RhNC+0YDQvNCw0YbQuNGOINC+INC30LDQtNCw0YfQtSIKICAgICAgICBhZ2VudE1vZHVsZSAtPiBtZW1vcnlNb2R1bGUgItCn0LjRgtCw0LXRgi/Qv9C40YjQtdGCINC60L7QvdGC0LXQutGB0YIg0L/QvtC70YzQt9C+0LLQsNGC0LXQu9GPIgogICAgICAgIGFnZW50TW9kdWxlIC0+IHRhc2tNb2R1bGUgItCh0L7Qt9C00LDRkdGCINC30LDQtNCw0YfRgyDQv9GA0L7Qs9GA0LDQvNC80L3QviAodG9vbF91c2UpIgogICAgICAgIGFuYWx5dGljc01vZHVsZSAtPiB0YXNrTW9kdWxlICLQkNCz0YDQtdCz0LjRgNGD0LXRgiDQtNCw0L3QvdGL0LUg0L/QviDQt9Cw0LTQsNGH0LDQvCIKICAgICAgICB0ZWxlZ3JhbU1vZHVsZSAtPiB1c2VyTW9kdWxlICLQn9GA0LjQstGP0LfRi9Cy0LDQtdGCIFRlbGVncmFtLdCw0LrQutCw0YPQvdGCIgoKICAgICAgICAvLyDQnNC+0LTRg9C70Ywg4oaSINCc0L7QtNGD0LvRjCAo0YHQvtCx0YvRgtC40Y8sINCw0YHQuNC90YXRgNC+0L3QvdC+KQogICAgICAgIHJlbWluZGVyTW9kdWxlIC0+IG5vdGlmTW9kdWxlICJSZW1pbmRlckR1ZUV2ZW50IiAiU3ByaW5nIEV2ZW50IgogICAgICAgIG5vdGlmTW9kdWxlIC0+IHRlbGVncmFtTW9kdWxlICLQntGC0L/RgNCw0LLQuNGC0Ywg0YPQstC10LTQvtC80LvQtdC90LjQtSDQsiBUZWxlZ3JhbSIKCiAgICAgICAgLy8g0JzQvtC00YPQu9GMIOKGkiDQktC90LXRiNC90LjQtSDRgdC40YHRgtC10LzRiwogICAgICAgIGFnZW50TW9kdWxlIC0+IGNsYXVkZUFwaSAi0JLRi9C30YvQstCw0LXRgiBBSSIgIkhUVFBTIgogICAgICAgIHRlbGVncmFtTW9kdWxlIC0+IHRlbGVncmFtQXBpICJXZWJob29rLCBzZW5kTWVzc2FnZSIgIkhUVFBTIgoKICAgICAgICAvLyDQktGB0LUg0LzQvtC00YPQu9C4IOKGkiDQkdCUCiAgICAgICAgdXNlck1vZHVsZSAtPiBkYiAi0KfQuNGC0LDQtdGCL9C/0LjRiNC10YIiICJKREJDIgogICAgICAgIHRhc2tNb2R1bGUgLT4gZGIgItCn0LjRgtCw0LXRgi/Qv9C40YjQtdGCIiAiSkRCQyIKICAgICAgICBwcm9qZWN0TW9kdWxlIC0+IGRiICLQp9C40YLQsNC10YIv0L/QuNGI0LXRgiIgIkpEQkMiCiAgICAgICAgcmVtaW5kZXJNb2R1bGUgLT4gZGIgItCn0LjRgtCw0LXRgi/Qv9C40YjQtdGCIiAiSkRCQyIKICAgICAgICBub3RpZk1vZHVsZSAtPiBkYiAi0KfQuNGC0LDQtdGCL9C/0LjRiNC10YIiICJKREJDIgogICAgICAgIGFnZW50TW9kdWxlIC0+IGRiICLQp9C40YLQsNC10YIv0L/QuNGI0LXRgiIgIkpEQkMiCiAgICAgICAgbWVtb3J5TW9kdWxlIC0+IGRiICLQp9C40YLQsNC10YIv0L/QuNGI0LXRgiIgIkpEQkMiCiAgICAgICAgdGVsZWdyYW1Nb2R1bGUgLT4gZGIgItCn0LjRgtCw0LXRgi/Qv9C40YjQtdGCIiAiSkRCQyIKICAgICAgICBhbmFseXRpY3NNb2R1bGUgLT4gZGIgItCn0LjRgtCw0LXRgi/Qv9C40YjQtdGCIiAiSkRCQyIKCiAgICAgICAgLy8g4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQIERFUExPWU1FTlQ6IExvY2FsIERldmVsb3BtZW50IOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkAogICAgICAgIGRlcGxveW1lbnRFbnZpcm9ubWVudCAiTG9jYWwgRGV2ZWxvcG1lbnQiIHsKICAgICAgICAgICAgZGVwbG95bWVudE5vZGUgIkRldmVsb3BlciBMYXB0b3AiICIiICJXaW5kb3dzIDExIiB7CiAgICAgICAgICAgICAgICBkZXBsb3ltZW50Tm9kZSAiRG9ja2VyIERlc2t0b3AiICIiICJEb2NrZXIiIHsKICAgICAgICAgICAgICAgICAgICBjb250YWluZXJJbnN0YW5jZSBkYgogICAgICAgICAgICAgICAgICAgIGNvbnRhaW5lckluc3RhbmNlIGNhY2hlCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICBkZXBsb3ltZW50Tm9kZSAiSlZNIiAiIiAiSmF2YSAyNSIgewogICAgICAgICAgICAgICAgICAgIGNvbnRhaW5lckluc3RhbmNlIGFwaQogICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgZGVwbG95bWVudE5vZGUgIk5vZGUuanMiICIiICJWaXRlIERldiBTZXJ2ZXIiIHsKICAgICAgICAgICAgICAgICAgICBjb250YWluZXJJbnN0YW5jZSBzcGEKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgfQogICAgICAgIH0KICAgIH0KCiAgICB2aWV3cyB7CgogICAgICAgIC8vIOKUgOKUgOKUgCDQo9GA0L7QstC10L3RjCAxOiBTeXN0ZW0gQ29udGV4dCDilIDilIDilIAKICAgICAgICBzeXN0ZW1Db250ZXh0IGtsYXdhICJTeXN0ZW1Db250ZXh0IiAiS2xhd2Eg0Lgg0LXRkSDQvtC60YDRg9C20LXQvdC40LUiIHsKICAgICAgICAgICAgaW5jbHVkZSAqCiAgICAgICAgICAgIGF1dG9MYXlvdXQKICAgICAgICB9CgogICAgICAgIC8vIOKUgOKUgOKUgCDQo9GA0L7QstC10L3RjCAyOiBDb250YWluZXJzIOKUgOKUgOKUgAogICAgICAgIGNvbnRhaW5lciBrbGF3YSAiQ29udGFpbmVycyIgItCY0Lcg0YfQtdCz0L4gS2xhd2Eg0YTQuNC30LjRh9C10YHQutC4INGB0L7RgdGC0L7QuNGCIiB7CiAgICAgICAgICAgIGluY2x1ZGUgKgogICAgICAgICAgICBhdXRvTGF5b3V0CiAgICAgICAgfQoKICAgICAgICAvLyDilIDilIDilIAg0KPRgNC+0LLQtdC90YwgMzogQ29tcG9uZW50cyDilIDilIDilIAKICAgICAgICBjb21wb25lbnQgYXBpICJDb21wb25lbnRzIiAi0JzQvtC00YPQu9C4INCy0L3Rg9GC0YDQuCBTcHJpbmcgQm9vdCBBUEkiIHsKICAgICAgICAgICAgaW5jbHVkZSAqCiAgICAgICAgICAgIGF1dG9MYXlvdXQKICAgICAgICB9CgogICAgICAgIC8vIOKUgOKUgOKUgCDQodGG0LXQvdCw0YDQuNC5OiDQntGC0L/RgNCw0LLQutCwINGB0L7QvtCx0YnQtdC90LjRjyDQsiBBSS3Rh9Cw0YIg4pSA4pSA4pSACiAgICAgICAgZHluYW1pYyBhcGkgIlNlbmRNZXNzYWdlRmxvdyIgItCf0L7Qu9GM0LfQvtCy0LDRgtC10LvRjCDQvtGC0L/RgNCw0LLQu9GP0LXRgiDRgdC+0L7QsdGJ0LXQvdC40LUg0LIgQUkt0YfQsNGCIiB7CiAgICAgICAgICAgIHNwYSAtPiBhZ2VudE1vZHVsZSAiUE9TVCAvYWdlbnQvY2hhdCB7bWVzc2FnZX0iCiAgICAgICAgICAgIGFnZW50TW9kdWxlIC0+IG1lbW9yeU1vZHVsZSAi0J/QvtC70YPRh9C40YLRjCDQutC+0L3RgtC10LrRgdGCICjRhNCw0LrRgtGLLCDQt9Cw0LTQsNGH0LgpIgogICAgICAgICAgICBhZ2VudE1vZHVsZSAtPiBjbGF1ZGVBcGkgItCh0YTQvtGA0LzQuNGA0L7QstCw0YLRjCDQv9GA0L7QvNC/0YIsINC+0YLQv9GA0LDQstC40YLRjCIKICAgICAgICAgICAgY2xhdWRlQXBpIC0+IGFnZW50TW9kdWxlICLQntGC0LLQtdGCIEFJIgogICAgICAgICAgICBhZ2VudE1vZHVsZSAtPiBkYiAi0KHQvtGF0YDQsNC90LjRgtGMINGB0L7QvtCx0YnQtdC90LjQtSDQuCDQvtGC0LLQtdGCIgogICAgICAgICAgICBhdXRvTGF5b3V0CiAgICAgICAgfQoKICAgICAgICAvLyDilIDilIDilIAg0KHRhtC10L3QsNGA0LjQuTog0KHRgNCw0LHQsNGC0YvQstCw0L3QuNC1INC90LDQv9C+0LzQuNC90LDQvdC40Y8g4pSA4pSA4pSACiAgICAgICAgZHluYW1pYyBhcGkgIlJlbWluZGVyRmxvdyIgItCd0LDRgdGC0YPQv9Cw0LXRgiDQstGA0LXQvNGPINC90LDQv9C+0LzQuNC90LDQvdC40Y8iIHsKICAgICAgICAgICAgcmVtaW5kZXJNb2R1bGUgLT4gdGFza01vZHVsZSAiU2NoZWR1bGVyOiDQt9Cw0LTQsNGH0LAg0LXRidGRINCw0LrRgtGD0LDQu9GM0L3QsD8iCiAgICAgICAgICAgIHJlbWluZGVyTW9kdWxlIC0+IG5vdGlmTW9kdWxlICLQn9GD0LHQu9C40LrRg9C10YIgUmVtaW5kZXJEdWVFdmVudCIKICAgICAgICAgICAgbm90aWZNb2R1bGUgLT4gZGIgItCh0L7RhdGA0LDQvdC40YLRjCDRg9Cy0LXQtNC+0LzQu9C10L3QuNC1IgogICAgICAgICAgICBub3RpZk1vZHVsZSAtPiB0ZWxlZ3JhbU1vZHVsZSAi0J7RgtC/0YDQsNCy0LjRgtGMINCyIFRlbGVncmFtICjQtdGB0LvQuCDQv9GA0LjQstGP0LfQsNC9KSIKICAgICAgICAgICAgdGVsZWdyYW1Nb2R1bGUgLT4gdGVsZWdyYW1BcGkgInNlbmRNZXNzYWdlIgogICAgICAgICAgICBhdXRvTGF5b3V0CiAgICAgICAgfQoKICAgICAgICAvLyDilIDilIDilIAg0KHRhtC10L3QsNGA0LjQuTog0KHQvtC30LTQsNC90LjQtSDQt9Cw0LTQsNGH0Lgg4pSA4pSA4pSACiAgICAgICAgZHluYW1pYyBhcGkgIkNyZWF0ZVRhc2tGbG93IiAi0J/QvtC70YzQt9C+0LLQsNGC0LXQu9GMINGB0L7Qt9C00LDRkdGCINC90L7QstGD0Y4g0LfQsNC00LDRh9GDIiB7CiAgICAgICAgICAgIHNwYSAtPiB0YXNrTW9kdWxlICJQT1NUIC90YXNrcyB7dGl0bGUsIHByb2plY3RJZCwgcHJpb3JpdHl9IgogICAgICAgICAgICB0YXNrTW9kdWxlIC0+IHByb2plY3RNb2R1bGUgItCf0YDQvtCy0LXRgNC40YLRjDog0L/RgNC+0LXQutGCINGB0YPRidC10YHRgtCy0YPQtdGCPyIKICAgICAgICAgICAgcHJvamVjdE1vZHVsZSAtPiBkYiAiU0VMRUNUIHByb2plY3QgV0hFUkUgaWQgPSA/IgogICAgICAgICAgICB0YXNrTW9kdWxlIC0+IGRiICJJTlNFUlQgSU5UTyB0YXNrIgogICAgICAgICAgICB0YXNrTW9kdWxlIC0+IHNwYSAiMjAxIENyZWF0ZWQ6IFRhc2tSZXNwb25zZSIKICAgICAgICAgICAgYXV0b0xheW91dAogICAgICAgIH0KCiAgICAgICAgLy8g4pSA4pSA4pSAINCh0YbQtdC90LDRgNC40Lk6INCg0LXQs9C40YHRgtGA0LDRhtC40Y8g0L/QvtC70YzQt9C+0LLQsNGC0LXQu9GPIOKUgOKUgOKUgAogICAgICAgIGR5bmFtaWMgYXBpICJSZWdpc3RlckZsb3ciICLQndC+0LLRi9C5INC/0L7Qu9GM0LfQvtCy0LDRgtC10LvRjCDRgNC10LPQuNGB0YLRgNC40YDRg9C10YLRgdGPINCyINGB0LjRgdGC0LXQvNC1IiB7CiAgICAgICAgICAgIHNwYSAtPiB1c2VyTW9kdWxlICJQT1NUIC9hdXRoL3JlZ2lzdGVyIHtlbWFpbCwgcGFzc3dvcmQsIGZpcnN0TmFtZX0iCiAgICAgICAgICAgIHVzZXJNb2R1bGUgLT4gZGIgItCf0YDQvtCy0LXRgNC40YLRjCDRg9C90LjQutCw0LvRjNC90L7RgdGC0YwgZW1haWwiCiAgICAgICAgICAgIHVzZXJNb2R1bGUgLT4gZGIgIklOU0VSVCBJTlRPIF91c2VyIChCQ3J5cHQgaGFzaCkiCiAgICAgICAgICAgIHVzZXJNb2R1bGUgLT4gc3BhICIyMDEgQ3JlYXRlZDoge2FjY2Vzc1Rva2VuLCByZWZyZXNoVG9rZW59IgogICAgICAgICAgICBhdXRvTGF5b3V0CiAgICAgICAgfQoKICAgICAgICAvLyDilIDilIDilIAg0KHRhtC10L3QsNGA0LjQuTogQUkg0YHQvtC30LTQsNGR0YIg0LfQsNC00LDRh9GDINC40Lcg0YfQsNGC0LAg4pSA4pSA4pSACiAgICAgICAgZHluYW1pYyBhcGkgIkFJQ3JlYXRlVGFza0Zsb3ciICJBSS3QsNGB0YHQuNGB0YLQtdC90YIg0YHQvtC30LTQsNGR0YIg0LfQsNC00LDRh9GDINC/0L4g0LfQsNC/0YDQvtGB0YMg0LjQtyDRh9Cw0YLQsCIgewogICAgICAgICAgICBzcGEgLT4gYWdlbnRNb2R1bGUgIlBPU1QgL2FnZW50L2NoYXQgJ9GB0L7Qt9C00LDQuSDQt9Cw0LTQsNGH0YMg0LrRg9C/0LjRgtGMINC80L7Qu9C+0LrQviciCiAgICAgICAgICAgIGFnZW50TW9kdWxlIC0+IG1lbW9yeU1vZHVsZSAi0J/QvtC70YPRh9C40YLRjCDQutC+0L3RgtC10LrRgdGCIgogICAgICAgICAgICBhZ2VudE1vZHVsZSAtPiBjbGF1ZGVBcGkgItCf0YDQvtC80L/RgiDRgSB0b29sX3VzZSIKICAgICAgICAgICAgY2xhdWRlQXBpIC0+IGFnZW50TW9kdWxlICJ0b29sX2NhbGw6IGNyZWF0ZV90YXNrIgogICAgICAgICAgICBhZ2VudE1vZHVsZSAtPiB0YXNrTW9kdWxlICLQodC+0LfQtNCw0YLRjCDQt9Cw0LTQsNGH0YMg0L/RgNC+0LPRgNCw0LzQvNC90L4iCiAgICAgICAgICAgIHRhc2tNb2R1bGUgLT4gZGIgIklOU0VSVCBJTlRPIHRhc2siCiAgICAgICAgICAgIGFnZW50TW9kdWxlIC0+IHNwYSAi0J7RgtCy0LXRgjogJ9Ch0L7Qt9C00LDQuyDQt9Cw0LTQsNGH0YMg0JrRg9C/0LjRgtGMINC80L7Qu9C+0LrQviciCiAgICAgICAgICAgIGF1dG9MYXlvdXQKICAgICAgICB9CgogICAgICAgIC8vIOKUgOKUgOKUgCBEZXBsb3ltZW50OiBMb2NhbCBEZXZlbG9wbWVudCDilIDilIDilIAKICAgICAgICBkZXBsb3ltZW50IGtsYXdhICJMb2NhbCBEZXZlbG9wbWVudCIgIkxvY2FsRGV2IiAi0JvQvtC60LDQu9GM0L3QvtC1INC+0LrRgNGD0LbQtdC90LjQtSDRgNCw0LfRgNCw0LHQvtGC0YfQuNC60LAiIHsKICAgICAgICAgICAgaW5jbHVkZSAqCiAgICAgICAgICAgIGF1dG9MYXlvdXQKICAgICAgICB9CgogICAgICAgIC8vIOKUgOKUgOKUgCDQodGC0LjQu9C4IOKUgOKUgOKUgAogICAgICAgIHN0eWxlcyB7CiAgICAgICAgICAgIGVsZW1lbnQgIlBlcnNvbiIgewogICAgICAgICAgICAgICAgc2hhcGUgUGVyc29uCiAgICAgICAgICAgICAgICBiYWNrZ3JvdW5kICMxZTNhNWYKICAgICAgICAgICAgICAgIGNvbG9yICNmZmZmZmYKICAgICAgICAgICAgfQogICAgICAgICAgICBlbGVtZW50ICJTb2Z0d2FyZSBTeXN0ZW0iIHsKICAgICAgICAgICAgICAgIGJhY2tncm91bmQgIzI1NjNlYgogICAgICAgICAgICAgICAgY29sb3IgI2ZmZmZmZgogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgIkNvbnRhaW5lciIgewogICAgICAgICAgICAgICAgYmFja2dyb3VuZCAjM2I4MmY2CiAgICAgICAgICAgICAgICBjb2xvciAjZmZmZmZmCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiQ29tcG9uZW50IiB7CiAgICAgICAgICAgICAgICBiYWNrZ3JvdW5kICM2MGE1ZmEKICAgICAgICAgICAgICAgIGNvbG9yICMwMDAwMDAKICAgICAgICAgICAgfQogICAgICAgICAgICBlbGVtZW50ICJFeHRlcm5hbCIgewogICAgICAgICAgICAgICAgYmFja2dyb3VuZCAjNmI3MjgwCiAgICAgICAgICAgICAgICBjb2xvciAjZmZmZmZmCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiRGF0YWJhc2UiIHsKICAgICAgICAgICAgICAgIHNoYXBlIEN5bGluZGVyCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiRnJvbnRlbmQiIHsKICAgICAgICAgICAgICAgIHNoYXBlIFdlYkJyb3dzZXIKICAgICAgICAgICAgfQogICAgICAgICAgICByZWxhdGlvbnNoaXAgIlNwcmluZyBFdmVudCIgewogICAgICAgICAgICAgICAgc3R5bGUgZGFzaGVkCiAgICAgICAgICAgICAgICBjb2xvciAjZjU5ZTBiCiAgICAgICAgICAgIH0KICAgICAgICB9CiAgICB9CgogICAgY29uZmlndXJhdGlvbiB7CiAgICAgICAgc2NvcGUgc29mdHdhcmVzeXN0ZW0KICAgIH0KfQ==",
+    "structurizr.inspection.info" : "0",
+    "structurizr.inspection.ignore" : "0",
+    "structurizr.inspection.warning" : "0"
+  },
+  "views" : {
+    "componentViews" : [ {
+      "automaticLayout" : {
+        "edgeSeparation" : 50,
+        "nodeSeparation" : 50,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 100,
+        "vertices" : true
+      },
+      "containerId" : "6",
+      "description" : "Модули внутри Spring Boot API",
+      "elements" : [ {
+        "id" : "2",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "3",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "5",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "7",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "8",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "9",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "10",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "11",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "12",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "13",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "14",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "15",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "16",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "externalContainerBoundariesVisible" : false,
+      "key" : "Components",
+      "name" : "Component View: Klawa - Spring Boot API",
+      "order" : 3,
+      "relationships" : [ {
+        "id" : "25"
+      }, {
+        "id" : "26"
+      }, {
+        "id" : "27"
+      }, {
+        "id" : "28"
+      }, {
+        "id" : "29"
+      }, {
+        "id" : "30"
+      }, {
+        "id" : "31"
+      }, {
+        "id" : "32"
+      }, {
+        "id" : "33"
+      }, {
+        "id" : "34"
+      }, {
+        "id" : "35"
+      }, {
+        "id" : "36"
+      }, {
+        "id" : "37"
+      }, {
+        "id" : "38"
+      }, {
+        "id" : "39"
+      }, {
+        "id" : "40"
+      }, {
+        "id" : "41"
+      }, {
+        "id" : "43"
+      }, {
+        "id" : "45"
+      }, {
+        "id" : "46"
+      }, {
+        "id" : "47"
+      }, {
+        "id" : "48"
+      }, {
+        "id" : "49"
+      }, {
+        "id" : "50"
+      }, {
+        "id" : "51"
+      }, {
+        "id" : "52"
+      }, {
+        "id" : "53"
+      } ]
+    } ],
+    "configuration" : {
+      "lastSavedView" : "Diagram2",
+      "styles" : {
+        "elements" : [ {
+          "background" : "#60a5fa",
+          "color" : "#000000",
+          "tag" : "Component"
+        }, {
+          "background" : "#3b82f6",
+          "color" : "#ffffff",
+          "tag" : "Container"
+        }, {
+          "shape" : "Cylinder",
+          "tag" : "Database"
+        }, {
+          "background" : "#6b7280",
+          "color" : "#ffffff",
+          "tag" : "External"
+        }, {
+          "shape" : "WebBrowser",
+          "tag" : "Frontend"
+        }, {
+          "background" : "#1e3a5f",
+          "color" : "#ffffff",
+          "shape" : "Person",
+          "tag" : "Person"
+        }, {
+          "background" : "#2563eb",
+          "color" : "#ffffff",
+          "tag" : "Software System"
+        } ],
+        "relationships" : [ {
+          "color" : "#f59e0b",
+          "style" : "Dashed",
+          "tag" : "Spring Event"
+        } ]
+      },
+      "terminology" : { }
+    },
+    "containerViews" : [ {
+      "automaticLayout" : {
+        "edgeSeparation" : 50,
+        "nodeSeparation" : 50,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 100,
+        "vertices" : true
+      },
+      "description" : "Из чего Klawa физически состоит",
+      "elements" : [ {
+        "id" : "1",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "2",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "3",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "5",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "6",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "16",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "17",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "externalSoftwareSystemBoundariesVisible" : false,
+      "key" : "Containers",
+      "name" : "Container View: Klawa",
+      "order" : 2,
+      "relationships" : [ {
+        "id" : "21"
+      }, {
+        "id" : "22"
+      }, {
+        "id" : "23"
+      }, {
+        "id" : "24"
+      }, {
+        "id" : "42"
+      }, {
+        "id" : "44"
+      } ],
+      "softwareSystemId" : "4"
+    } ],
+    "deploymentViews" : [ {
+      "automaticLayout" : {
+        "edgeSeparation" : 50,
+        "nodeSeparation" : 50,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 100,
+        "vertices" : true
+      },
+      "description" : "Локальное окружение разработчика",
+      "elements" : [ {
+        "id" : "54",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "55",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "56",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "57",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "58",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "59",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "62",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "63",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "environment" : "Local Development",
+      "key" : "LocalDev",
+      "name" : "Deployment View: Klawa - Local Development",
+      "order" : 9,
+      "relationships" : [ {
+        "id" : "60"
+      }, {
+        "id" : "61"
+      }, {
+        "id" : "64"
+      } ],
+      "softwareSystemId" : "4"
+    } ],
+    "dynamicViews" : [ {
+      "automaticLayout" : {
+        "edgeSeparation" : 50,
+        "nodeSeparation" : 50,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 100,
+        "vertices" : true
+      },
+      "description" : "Пользователь отправляет сообщение в AI-чат",
+      "elementId" : "6",
+      "elements" : [ {
+        "id" : "2",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "5",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "12",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "13",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "16",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "externalBoundariesVisible" : false,
+      "key" : "SendMessageFlow",
+      "name" : "Dynamic View: Klawa - Spring Boot API",
+      "order" : 4,
+      "relationships" : [ {
+        "description" : "POST /agent/chat {message}",
+        "id" : "30",
+        "order" : "1",
+        "response" : false
+      }, {
+        "description" : "Получить контекст (факты, задачи)",
+        "id" : "35",
+        "order" : "2",
+        "response" : false
+      }, {
+        "description" : "Сформировать промпт, отправить",
+        "id" : "41",
+        "order" : "3",
+        "response" : false
+      }, {
+        "description" : "Ответ AI",
+        "id" : "41",
+        "order" : "4",
+        "response" : true
+      }, {
+        "description" : "Сохранить сообщение и ответ",
+        "id" : "50",
+        "order" : "5",
+        "response" : false
+      } ]
+    }, {
+      "automaticLayout" : {
+        "edgeSeparation" : 50,
+        "nodeSeparation" : 50,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 100,
+        "vertices" : true
+      },
+      "description" : "Наступает время напоминания",
+      "elementId" : "6",
+      "elements" : [ {
+        "id" : "3",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "8",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "10",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "11",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "14",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "16",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "externalBoundariesVisible" : false,
+      "key" : "ReminderFlow",
+      "name" : "Dynamic View: Klawa - Spring Boot API",
+      "order" : 5,
+      "relationships" : [ {
+        "description" : "Scheduler: задача ещё актуальна?",
+        "id" : "34",
+        "order" : "1",
+        "response" : false
+      }, {
+        "description" : "Публикует ReminderDueEvent",
+        "id" : "39",
+        "order" : "2",
+        "response" : false
+      }, {
+        "description" : "Сохранить уведомление",
+        "id" : "49",
+        "order" : "3",
+        "response" : false
+      }, {
+        "description" : "Отправить в Telegram (если привязан)",
+        "id" : "40",
+        "order" : "4",
+        "response" : false
+      }, {
+        "description" : "sendMessage",
+        "id" : "43",
+        "order" : "5",
+        "response" : false
+      } ]
+    }, {
+      "automaticLayout" : {
+        "edgeSeparation" : 50,
+        "nodeSeparation" : 50,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 100,
+        "vertices" : true
+      },
+      "description" : "Пользователь создаёт новую задачу",
+      "elementId" : "6",
+      "elements" : [ {
+        "id" : "5",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "8",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "9",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "16",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "externalBoundariesVisible" : false,
+      "key" : "CreateTaskFlow",
+      "name" : "Dynamic View: Klawa - Spring Boot API",
+      "order" : 6,
+      "relationships" : [ {
+        "description" : "POST /tasks {title, projectId, priority}",
+        "id" : "26",
+        "order" : "1",
+        "response" : false
+      }, {
+        "description" : "Проверить: проект существует?",
+        "id" : "33",
+        "order" : "2",
+        "response" : false
+      }, {
+        "description" : "SELECT project WHERE id = ?",
+        "id" : "47",
+        "order" : "3",
+        "response" : false
+      }, {
+        "description" : "INSERT INTO task",
+        "id" : "46",
+        "order" : "4",
+        "response" : false
+      }, {
+        "description" : "201 Created: TaskResponse",
+        "id" : "26",
+        "order" : "5",
+        "response" : true
+      } ]
+    }, {
+      "automaticLayout" : {
+        "edgeSeparation" : 50,
+        "nodeSeparation" : 50,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 100,
+        "vertices" : true
+      },
+      "description" : "Новый пользователь регистрируется в системе",
+      "elementId" : "6",
+      "elements" : [ {
+        "id" : "5",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "7",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "16",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "externalBoundariesVisible" : false,
+      "key" : "RegisterFlow",
+      "name" : "Dynamic View: Klawa - Spring Boot API",
+      "order" : 7,
+      "relationships" : [ {
+        "description" : "POST /auth/register {email, password, firstName}",
+        "id" : "25",
+        "order" : "1",
+        "response" : false
+      }, {
+        "description" : "Проверить уникальность email",
+        "id" : "45",
+        "order" : "2",
+        "response" : false
+      }, {
+        "description" : "INSERT INTO _user (BCrypt hash)",
+        "id" : "45",
+        "order" : "3",
+        "response" : false
+      }, {
+        "description" : "201 Created: {accessToken, refreshToken}",
+        "id" : "25",
+        "order" : "4",
+        "response" : true
+      } ]
+    }, {
+      "automaticLayout" : {
+        "edgeSeparation" : 50,
+        "nodeSeparation" : 50,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 100,
+        "vertices" : true
+      },
+      "description" : "AI-ассистент создаёт задачу по запросу из чата",
+      "elementId" : "6",
+      "elements" : [ {
+        "id" : "2",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "5",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "8",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "12",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "13",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "16",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "externalBoundariesVisible" : false,
+      "key" : "AICreateTaskFlow",
+      "name" : "Dynamic View: Klawa - Spring Boot API",
+      "order" : 8,
+      "relationships" : [ {
+        "description" : "POST /agent/chat 'создай задачу купить молоко'",
+        "id" : "30",
+        "order" : "1",
+        "response" : false
+      }, {
+        "description" : "Получить контекст",
+        "id" : "35",
+        "order" : "2",
+        "response" : false
+      }, {
+        "description" : "Промпт с tool_use",
+        "id" : "41",
+        "order" : "3",
+        "response" : false
+      }, {
+        "description" : "tool_call: create_task",
+        "id" : "41",
+        "order" : "4",
+        "response" : true
+      }, {
+        "description" : "Создать задачу программно",
+        "id" : "36",
+        "order" : "5",
+        "response" : false
+      }, {
+        "description" : "INSERT INTO task",
+        "id" : "46",
+        "order" : "6",
+        "response" : false
+      }, {
+        "description" : "Ответ: 'Создал задачу Купить молоко'",
+        "id" : "30",
+        "order" : "7",
+        "response" : true
+      } ]
+    } ],
+    "systemContextViews" : [ {
+      "automaticLayout" : {
+        "edgeSeparation" : 50,
+        "nodeSeparation" : 50,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 100,
+        "vertices" : true
+      },
+      "description" : "Klawa и её окружение",
+      "elements" : [ {
+        "id" : "1",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "2",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "3",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "4",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "enterpriseBoundaryVisible" : true,
+      "key" : "SystemContext",
+      "name" : "System Context View: Klawa",
+      "order" : 1,
+      "relationships" : [ {
+        "id" : "18"
+      }, {
+        "id" : "19"
+      }, {
+        "id" : "20"
+      } ],
+      "softwareSystemId" : "4"
+    } ]
+  }
+}

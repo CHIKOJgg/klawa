@@ -22,10 +22,6 @@ public class AuthController {
         return ResponseEntity.ok(authService.authenticate(authRequest));
     }
 
-    @PostMapping("/login")
-    public String login(@RequestBody User user) {
-        return user.toString();
-    }
 
     @PostMapping("/refresh")
     public String refreshJwt(@RequestBody User user) {

@@ -15,12 +15,13 @@ import java.util.stream.Collectors;
     @RestControllerAdvice
     @Slf4j
     public class GlobalExceptionHandler {
-        @ExceptionHandler(ChangeSetPersister.NotFoundException.class)
-        public ResponseEntity<ApiError> handleNotFoundException(ChangeSetPersister.NotFoundException e, HttpServletRequest request) {
-            log.warn("Not found: {}", e.getMessage());
-            return ResponseEntity.status(404).body(
-                    ApiError.of(404,"NOT_FOUND", "not found error",request.getRequestURI()));
-        }
+       //404
+       @ExceptionHandler(ChangeSetPersister.NotFoundException.class)
+       public ResponseEntity<ApiError> handleNotFoundException(ChangeSetPersister.NotFoundException e, HttpServletRequest request) {
+           log.warn("Not found: {}", e.getMessage());
+           return ResponseEntity.status(404).body(
+                   ApiError.of(404,"NOT_FOUND", "not found error",request.getRequestURI()));
+       }
         @ExceptionHandler(HttpClientErrorException.Conflict.class)
         public ResponseEntity<ApiError> apiErrorResponseEntity(Exception e, HttpServletRequest request) {
             log.warn("conflict: {}", e.getMessage());
@@ -29,14 +30,16 @@ import java.util.stream.Collectors;
                     .body(ApiError.of(409,"CONFLICT","conflict error",request.getRequestURI() ));
 
         }
+
         @ExceptionHandler(HttpClientErrorException.Forbidden.class)
         public ResponseEntity<ApiError> apiErrorResponseEntityForbidden(Exception e, HttpServletRequest request) {
             log.warn("Forbidden: {}", e.getMessage());
             return ResponseEntity
                     .status(403)
                     .body(ApiError
-                    .of(403,"FORBIDDEN","forbidden request",request.getRequestURI()));
+                            .of(403,"FORBIDDEN","forbidden request",request.getRequestURI()));
         }
+       //403
         @ExceptionHandler(MethodArgumentNotValidException.class)
         public ResponseEntity<ApiError> apiErrorResponseEntity(MethodArgumentNotValidException e, HttpServletRequest request) {
             String fields = e.getFieldErrors().stream().map(

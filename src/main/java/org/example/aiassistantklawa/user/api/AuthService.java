@@ -21,6 +21,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+
     @Transactional
     public AuthenticationResponse register( RegisterRequest request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
