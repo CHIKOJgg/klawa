@@ -1,0 +1,114 @@
+// Klawa Database Schema (DBML with Keycloak IDP)
+// Открыть и визуализировать на https://dbdiagram.io
+
+Table user_profile {
+  id uuid [pk, note: 'sub claim from Keycloak JWT']
+  email varchar(255) [unique, not null]
+  first_name varchar(100)
+  last_name varchar(100)
+  is_active boolean [default: true, not null]
+  created_at timestamptz [default: `now()`, not null]
+  updated_at timestamptz [default: `now()`, not null]
+  deleted_at timestamptz
+}
+
+Table project {
+  id bigserial [pk, increment]
+  name varchar(255) [not null]
+  description text
+  user_id uuid [not null, ref: > user_profile.id]
+  created_at timestamptz [default: `now()`, not null]
+  updated_at timestamptz [default: `now()`, not null]
+  deleted_at timestamptz
+}
+
+Table task {
+  id bigserial [pk, increment]
+  project_id bigint [not null, ref: > project.id]
+  user_id uuid [not null, ref: > user_profile.id]
+  title varchar(255) [not null]
+  description text
+  status varchar(20) [default: 'OPEN', not null]
+  priority varchar(20) [default: 'MEDIUM', not null]
+  due_date timestamptz
+  completed_at timestamptz
+  created_at timestamptz [default: `now()`, not null]
+  updated_at timestamptz [default: `now()`, not null]
+  deleted_at timestamptz
+}
+
+Table reminder {
+  id bigserial [pk, increment]
+  user_id uuid [not null, ref: > user_profile.id]
+  task_id bigint [ref: > task.id]
+  trigger_time timestamptz [not null]
+  message text [not null]
+  status varchar(20) [default: 'PENDING', not null]
+  last_notified_at timestamptz
+  created_at timestamptz [default: `now()`, not null]
+  updated_at timestamptz [default: `now()`, not null]
+}
+
+Table notification {
+  id bigserial [pk, increment]
+  user_id uuid [not null, ref: > user_profile.id]
+  type varchar(30) [not null]
+  message text [not null]
+  platform varchar(20) [default: 'APP', not null]
+  is_read boolean [default: false, not null]
+  read_at timestamptz
+  created_at timestamptz [default: `now()`, not null]
+  updated_at timestamptz [default: `now()`, not null]
+  deleted_at timestamptz
+}
+
+Table conversation {
+  id uuid [pk]
+  user_id uuid [not null, ref: > user_profile.id]
+  title varchar(255)
+  created_at timestamptz [default: `now()`, not null]
+  updated_at timestamptz [default: `now()`, not null]
+  deleted_at timestamptz
+}
+
+Table message {
+  id uuid [pk]
+  conversation_id uuid [not null, ref: > conversation.id]
+  role varchar(20) [not null]
+  content text [not null]
+  token_count integer
+  created_at timestamptz [default: `now()`, not null]
+  updated_at timestamptz [default: `now()`, not null]
+  deleted_at timestamptz
+}
+
+Table memory_entry {
+  id bigserial [pk, increment]
+  user_id uuid [not null, ref: > user_profile.id]
+  key varchar(100) [not null]
+  value text [not null]
+  source varchar(20) [default: 'MANUAL', not null]
+  created_at timestamptz [default: `now()`, not null]
+  updated_at timestamptz [default: `now()`, not null]
+  deleted_at timestamptz
+}
+
+Table telegram_account {
+  id bigserial [pk, increment]
+  user_id uuid [unique, not null, ref: - user_profile.id]
+  telegram_chat_id bigint [not null]
+  telegram_username varchar(64)
+  linked_at timestamptz [default: `now()`, not null]
+}
+
+Table event_publication {
+  id uuid [pk]
+  completion_date timestamp
+  event_type varchar(255) [not null]
+  listener_id varchar(255) [not null]
+  publication_date timestamp [not null]
+  serialized_event text [not null]
+  completion_attempts integer [default: 0]
+  completion_status varchar(255)
+  last_resubmission_date timestamp
+}

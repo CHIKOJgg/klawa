@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Klawa DB — Схема базы данных (Keycloak IDP)</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: #f1f5f9;
+      color: #0f172a;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: #ffffff;
+      border-bottom: 1px solid #cbd5e1;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .header-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-title h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #1e293b;
+    }
+    .header-badge {
+      font-size: 0.75rem;
+      background: #e2e8f0;
+      color: #475569;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .btn {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      color: #334155;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .btn:hover {
+      background: #e2e8f0;
+      border-color: #94a3b8;
+    }
+    #viewport {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+      background-color: #f8fafc;
+      background-image: 
+        linear-gradient(to right, #e2e8f0 1px, transparent 1px),
+        linear-gradient(to bottom, #e2e8f0 1px, transparent 1px);
+      background-size: 24px 24px;
+      cursor: grab;
+    }
+    #viewport:active {
+      cursor: grabbing;
+    }
+    #canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4000px;
+      height: 3000px;
+      transform-origin: 0 0;
+    }
+    svg#connections {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 10;
+    }
+    .table-card {
+      position: absolute;
+      width: 250px;
+      background: #ffffff;
+      border: 1px solid #789ec6;
+      border-radius: 6px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0,0,0,0.05);
+      cursor: move;
+      z-index: 20;
+      transition: box-shadow 0.15s;
+      overflow: hidden;
+    }
+    .table-card:hover {
+      box-shadow: 0 6px 16px rgba(0, 80, 180, 0.18);
+      border-color: #4a7ebb;
+    }
+    .table-header {
+      background: linear-gradient(to bottom, #9ab8dc 0%, #b8cfe9 100%);
+      border-bottom: 1px solid #789ec6;
+      padding: 7px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #0f172a;
+      font-weight: 700;
+      font-size: 0.88rem;
+    }
+    .table-header-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .table-icon {
+      width: 15px;
+      height: 15px;
+      background: #3b82f6;
+      border-radius: 2px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 9px;
+      font-weight: 900;
+    }
+    .table-collapse {
+      color: #475569;
+      font-size: 10px;
+    }
+    .table-body {
+      padding: 6px 0;
+      background: #ffffff;
+      font-size: 0.77rem;
+      line-height: 1.45;
+    }
+    .column-row {
+      padding: 3px 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #1e293b;
+    }
+    .column-row:hover {
+      background: #f1f5f9;
+    }
+    .col-icon {
+      width: 14px;
+      text-align: center;
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+    .col-pk { color: #eab308; } /* Yellow Key */
+    .col-fk { color: #ef4444; } /* Red Diamond */
+    .col-attr { color: #06b6d4; } /* Cyan Diamond */
+    .col-name {
+      font-weight: 600;
+      color: #0f172a;
+    }
+    .col-type {
+      margin-left: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      color: #64748b;
+      font-size: 0.73rem;
+    }
+    .table-footer {
+      background: #e2ecf7;
+      border-top: 1px solid #cbd5e1;
+      padding: 4px 10px;
+      font-size: 0.72rem;
+      color: #475569;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .ortho-line {
+      fill: none;
+      stroke: #1e293b;
+      stroke-width: 1.5;
+      stroke-dasharray: 6 3;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-title">
+      <h1>🗄️ Klawa AI Assistant &mdash; ER-диаграмма базы данных</h1>
+      <span class="header-badge">PostgreSQL 17</span>
+      <span class="header-badge" style="background:#dbeafe; color:#1d4ed8;">Keycloak OIDC Integration</span>
+      <span class="header-badge" style="background:#e0f2fe; color:#0369a1;">Orthogonal / Квадратные связи</span>
+    </div>
+    <div class="toolbar">
+      <button class="btn" onclick="zoom(0.1)">🔍 + Приблизить</button>
+      <button class="btn" onclick="zoom(-0.1)">🔍 &minus; Отдалить</button>
+      <button class="btn" onclick="resetView()">⟲ Сбросить масштаб</button>
+      <button class="btn" onclick="autoAlign()">📐 Выровнять сетку</button>
+    </div>
+  </header>
+
+  <div id="viewport">
+    <div id="canvas">
+      <svg id="connections">
+        <defs>
+          <!-- Crow's Foot Marker (Many) -->
+          <marker id="crowsfoot" viewBox="0 0 16 16" refX="15" refY="8" markerWidth="14" markerHeight="14" orient="auto-start-reverse">
+            <line x1="0" y1="2" x2="14" y2="8" stroke="#1e293b" stroke-width="1.8" />
+            <line x1="0" y1="14" x2="14" y2="8" stroke="#1e293b" stroke-width="1.8" />
+            <line x1="0" y1="8" x2="14" y2="8" stroke="#1e293b" stroke-width="1.8" />
+            <line x1="14" y1="1" x2="14" y2="15" stroke="#1e293b" stroke-width="1.8" />
+          </marker>
+          <!-- One-and-only-one Marker (One) -->
+          <marker id="one" viewBox="0 0 16 16" refX="2" refY="8" markerWidth="14" markerHeight="14" orient="auto-start-reverse">
+            <line x1="6" y1="2" x2="6" y2="14" stroke="#1e293b" stroke-width="1.8" />
+            <line x1="11" y1="2" x2="11" y2="14" stroke="#1e293b" stroke-width="1.8" />
+          </marker>
+        </defs>
+      </svg>
+    </div>
+  </div>
+
+  <script>
+    // Определение таблиц базы данных Klawa (Keycloak Identity Provider)
+    const tablesData = [
+      {
+        id: "user_profile",
+        title: "user_profile",
+        x: 480,
+        y: 60,
+        columns: [
+          { name: "id", type: "UUID", pk: true },
+          { name: "email", type: "VARCHAR(255)", attr: true },
+          { name: "first_name", type: "VARCHAR(100)", attr: true },
+          { name: "last_name", type: "VARCHAR(100)", attr: true },
+          { name: "is_active", type: "BOOLEAN", attr: true },
+          { name: "created_at", type: "TIMESTAMPTZ", attr: true },
+          { name: "updated_at", type: "TIMESTAMPTZ", attr: true },
+          { name: "deleted_at", type: "TIMESTAMPTZ", attr: true }
+        ]
+      },
+      {
+        id: "project",
+        title: "project",
+        x: 880,
+        y: 60,
+        columns: [
+          { name: "id", type: "BIGSERIAL", pk: true },
+          { name: "name", type: "VARCHAR(255)", attr: true },
+          { name: "description", type: "TEXT", attr: true },
+          { name: "user_id", type: "UUID", fk: true },
+          { name: "created_at", type: "TIMESTAMPTZ", attr: true },
+          { name: "updated_at", type: "TIMESTAMPTZ", attr: true },
+          { name: "deleted_at", type: "TIMESTAMPTZ", attr: true }
+        ]
+      },
+      {
+        id: "task",
+        title: "task",
+        x: 880,
+        y: 420,
+        columns: [
+          { name: "id", type: "BIGSERIAL", pk: true },
+          { name: "project_id", type: "BIGINT", fk: true },
+          { name: "user_id", type: "UUID", fk: true },
+          { name: "title", type: "VARCHAR(255)", attr: true },
+          { name: "description", type: "TEXT", attr: true },
+          { name: "status", type: "TASK_STATUS", attr: true },
+          { name: "priority", type: "TASK_PRIORITY", attr: true },
+          { name: "due_date", type: "TIMESTAMPTZ", attr: true },
+          { name: "completed_at", type: "TIMESTAMPTZ", attr: true },
+          { name: "created_at", type: "TIMESTAMPTZ", attr: true },
+          { name: "updated_at", type: "TIMESTAMPTZ", attr: true },
+          { name: "deleted_at", type: "TIMESTAMPTZ", attr: true }
+        ]
+      },
+      {
+        id: "reminder",
+        title: "reminder",
+        x: 1240,
+        y: 420,
+        columns: [
+          { name: "id", type: "BIGSERIAL", pk: true },
+          { name: "user_id", type: "UUID", fk: true },
+          { name: "task_id", type: "BIGINT", fk: true },
+          { name: "trigger_time", type: "TIMESTAMPTZ", attr: true },
+          { name: "message", type: "TEXT", attr: true },
+          { name: "status", type: "VARCHAR(20)", attr: true },
+          { name: "last_notified_at", type: "TIMESTAMPTZ", attr: true },
+          { name: "created_at", type: "TIMESTAMPTZ", attr: true },
+          { name: "updated_at", type: "TIMESTAMPTZ", attr: true }
+        ]
+      },
+      {
+        id: "notification",
+        title: "notification",
+        x: 100,
+        y: 60,
+        columns: [
+          { name: "id", type: "BIGSERIAL", pk: true },
+          { name: "user_id", type: "UUID", fk: true },
+          { name: "type", type: "NOTIF_TYPE", attr: true },
+          { name: "message", type: "TEXT", attr: true },
+          { name: "platform", type: "PLATFORM_TYPE", attr: true },
+          { name: "is_read", type: "BOOLEAN", attr: true },
+          { name: "read_at", type: "TIMESTAMPTZ", attr: true },
+          { name: "created_at", type: "TIMESTAMPTZ", attr: true },
+          { name: "updated_at", type: "TIMESTAMPTZ", attr: true },
+          { name: "deleted_at", type: "TIMESTAMPTZ", attr: true }
+        ]
+      },
+      {
+        id: "conversation",
+        title: "conversation",
+        x: 480,
+        y: 420,
+        columns: [
+          { name: "id", type: "UUID", pk: true },
+          { name: "user_id", type: "UUID", fk: true },
+          { name: "title", type: "VARCHAR(255)", attr: true },
+          { name: "created_at", type: "TIMESTAMPTZ", attr: true },
+          { name: "updated_at", type: "TIMESTAMPTZ", attr: true },
+          { name: "deleted_at", type: "TIMESTAMPTZ", attr: true }
+        ]
+      },
+      {
+        id: "message",
+        title: "message",
+        x: 480,
+        y: 720,
+        columns: [
+          { name: "id", type: "UUID", pk: true },
+          { name: "conversation_id", type: "UUID", fk: true },
+          { name: "role", type: "VARCHAR(20)", attr: true },
+          { name: "content", type: "TEXT", attr: true },
+          { name: "token_count", type: "INTEGER", attr: true },
+          { name: "created_at", type: "TIMESTAMPTZ", attr: true },
+          { name: "updated_at", type: "TIMESTAMPTZ", attr: true },
+          { name: "deleted_at", type: "TIMESTAMPTZ", attr: true }
+        ]
+      },
+      {
+        id: "memory_entry",
+        title: "memory_entry",
+        x: 100,
+        y: 420,
+        columns: [
+          { name: "id", type: "BIGSERIAL", pk: true },
+          { name: "user_id", type: "UUID", fk: true },
+          { name: "key", type: "VARCHAR(100)", attr: true },
+          { name: "value", type: "TEXT", attr: true },
+          { name: "source", type: "VARCHAR(20)", attr: true },
+          { name: "created_at", type: "TIMESTAMPTZ", attr: true },
+          { name: "updated_at", type: "TIMESTAMPTZ", attr: true },
+          { name: "deleted_at", type: "TIMESTAMPTZ", attr: true }
+        ]
+      },
+      {
+        id: "telegram_account",
+        title: "telegram_account",
+        x: 100,
+        y: 720,
+        columns: [
+          { name: "id", type: "BIGSERIAL", pk: true },
+          { name: "user_id", type: "UUID", fk: true },
+          { name: "telegram_chat_id", type: "BIGINT", attr: true },
+          { name: "telegram_username", type: "VARCHAR(64)", attr: true },
+          { name: "linked_at", type: "TIMESTAMPTZ", attr: true }
+        ]
+      }
+    ];
+
+    // Связи между таблицами (user_profile -> child tables)
+    const relationships = [
+      { from: "user_profile", to: "project" },
+      { from: "user_profile", to: "task" },
+      { from: "user_profile", to: "reminder" },
+      { from: "user_profile", to: "notification" },
+      { from: "user_profile", to: "conversation" },
+      { from: "user_profile", to: "memory_entry" },
+      { from: "user_profile", to: "telegram_account" },
+      { from: "project", to: "task" },
+      { from: "task", to: "reminder" },
+      { from: "conversation", to: "message" }
+    ];
+
+    const canvas = document.getElementById("canvas");
+    const svgConnections = document.getElementById("connections");
+    const viewport = document.getElementById("viewport");
+
+    // Рендеринг карточек таблиц
+    tablesData.forEach(t => {
+      const card = document.createElement("div");
+      card.className = "table-card";
+      card.id = "table-" + t.id;
+      card.style.left = t.x + "px";
+      card.style.top = t.y + "px";
+
+      let rowsHtml = "";
+      t.columns.forEach(col => {
+        let iconHtml = '<span class="col-icon col-attr">◇</span>';
+        if (col.pk) iconHtml = '<span class="col-icon col-pk">🔑</span>';
+        else if (col.fk) iconHtml = '<span class="col-icon col-fk">◇</span>';
+
+        rowsHtml += `
+          <div class="column-row">
+            ${iconHtml}
+            <span class="col-name">${col.name}</span>
+            <span class="col-type">${col.type}</span>
+          </div>
+        `;
+      });
+
+      card.innerHTML = `
+        <div class="table-header">
+          <div class="table-header-left">
+            <span class="table-icon">▦</span>
+            <span>${t.title}</span>
+          </div>
+          <span class="table-collapse">▼</span>
+        </div>
+        <div class="table-body">
+          ${rowsHtml}
+        </div>
+        <div class="table-footer">
+          <span>Indexes</span>
+          <span>▶</span>
+        </div>
+      `;
+
+      canvas.appendChild(card);
+      initDrag(card, t);
+    });
+
+    // Расчет ортогональных (строго под прямым углом 90°) связей
+    function drawOrthogonalConnections() {
+      const existingPaths = svgConnections.querySelectorAll(".ortho-path-group");
+      existingPaths.forEach(p => p.remove());
+
+      relationships.forEach(rel => {
+        const fromElem = document.getElementById("table-" + rel.from);
+        const toElem = document.getElementById("table-" + rel.to);
+        if (!fromElem || !toElem) return;
+
+        const fRect = {
+          left: parseFloat(fromElem.style.left),
+          top: parseFloat(fromElem.style.top),
+          width: fromElem.offsetWidth,
+          height: fromElem.offsetHeight
+        };
+        const tRect = {
+          left: parseFloat(toElem.style.left),
+          top: parseFloat(toElem.style.top),
+          width: toElem.offsetWidth,
+          height: toElem.offsetHeight
+        };
+
+        const fCenter = { x: fRect.left + fRect.width / 2, y: fRect.top + fRect.height / 2 };
+        const tCenter = { x: tRect.left + tRect.width / 2, y: tRect.top + tRect.height / 2 };
+
+        const dx = tCenter.x - fCenter.x;
+        const dy = tCenter.y - fCenter.y;
+
+        let startPoint, endPoint;
+        let pathD = "";
+
+        if (Math.abs(dx) >= Math.abs(dy)) {
+          if (dx > 0) {
+            startPoint = { x: fRect.left + fRect.width, y: fCenter.y };
+            endPoint = { x: tRect.left, y: tCenter.y };
+            const midX = (startPoint.x + endPoint.x) / 2;
+            pathD = `M ${startPoint.x} ${startPoint.y} L ${midX} ${startPoint.y} L ${midX} ${endPoint.y} L ${endPoint.x} ${endPoint.y}`;
+          } else {
+            startPoint = { x: fRect.left, y: fCenter.y };
+            endPoint = { x: tRect.left + tRect.width, y: tCenter.y };
+            const midX = (startPoint.x + endPoint.x) / 2;
+            pathD = `M ${startPoint.x} ${startPoint.y} L ${midX} ${startPoint.y} L ${midX} ${endPoint.y} L ${endPoint.x} ${endPoint.y}`;
+          }
+        } else {
+          if (dy > 0) {
+            startPoint = { x: fCenter.x, y: fRect.top + fRect.height };
+            endPoint = { x: tCenter.x, y: tRect.top };
+            const midY = (startPoint.y + endPoint.y) / 2;
+            pathD = `M ${startPoint.x} ${startPoint.y} L ${startPoint.x} ${midY} L ${endPoint.x} ${midY} L ${endPoint.x} ${endPoint.y}`;
+          } else {
+            startPoint = { x: fCenter.x, y: fRect.top };
+            endPoint = { x: tCenter.x, y: tRect.top + tRect.height };
+            const midY = (startPoint.y + endPoint.y) / 2;
+            pathD = `M ${startPoint.x} ${startPoint.y} L ${startPoint.x} ${midY} L ${endPoint.x} ${midY} L ${endPoint.x} ${endPoint.y}`;
+          }
+        }
+
+        const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        g.setAttribute("class", "ortho-path-group");
+
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", pathD);
+        path.setAttribute("class", "ortho-line");
+        path.setAttribute("marker-start", "url(#one)");
+        path.setAttribute("marker-end", "url(#crowsfoot)");
+
+        g.appendChild(path);
+        svgConnections.appendChild(g);
+      });
+    }
+
+    function initDrag(element, tableData) {
+      let isDragging = false;
+      let startMouseX = 0, startMouseY = 0;
+      let initialLeft = 0, initialTop = 0;
+
+      element.addEventListener("mousedown", (e) => {
+        if (e.button !== 0) return;
+        isDragging = true;
+        startMouseX = e.clientX;
+        startMouseY = e.clientY;
+        initialLeft = parseFloat(element.style.left) || 0;
+        initialTop = parseFloat(element.style.top) || 0;
+        element.style.zIndex = 50;
+        e.stopPropagation();
+      });
+
+      window.addEventListener("mousemove", (e) => {
+        if (!isDragging) return;
+        const deltaX = (e.clientX - startMouseX) / currentScale;
+        const deltaY = (e.clientY - startMouseY) / currentScale;
+
+        const newX = Math.round((initialLeft + deltaX) / 10) * 10;
+        const newY = Math.round((initialTop + deltaY) / 10) * 10;
+
+        element.style.left = newX + "px";
+        element.style.top = newY + "px";
+        tableData.x = newX;
+        tableData.y = newY;
+
+        drawOrthogonalConnections();
+      });
+
+      window.addEventListener("mouseup", () => {
+        if (isDragging) {
+          isDragging = false;
+          element.style.zIndex = 20;
+        }
+      });
+    }
+
+    let currentScale = 0.95;
+    let panX = 40, panY = 20;
+    let isPanning = false;
+    let panStart = { x: 0, y: 0 };
+
+    function updateTransform() {
+      canvas.style.transform = `translate(${panX}px, ${panY}px) scale(${currentScale})`;
+    }
+
+    viewport.addEventListener("mousedown", (e) => {
+      if (e.target === viewport || e.target === canvas || e.target.tagName === 'svg') {
+        isPanning = true;
+        panStart = { x: e.clientX - panX, y: e.clientY - panY };
+      }
+    });
+
+    window.addEventListener("mousemove", (e) => {
+      if (isPanning) {
+        panX = e.clientX - panStart.x;
+        panY = e.clientY - panStart.y;
+        updateTransform();
+      }
+    });
+
+    window.addEventListener("mouseup", () => {
+      isPanning = false;
+    });
+
+    viewport.addEventListener("wheel", (e) => {
+      e.preventDefault();
+      const zoomFactor = e.deltaY < 0 ? 1.08 : 0.92;
+      currentScale = Math.min(Math.max(currentScale * zoomFactor, 0.3), 2.5);
+      updateTransform();
+    }, { passive: false });
+
+    function zoom(delta) {
+      currentScale = Math.min(Math.max(currentScale + delta, 0.3), 2.5);
+      updateTransform();
+    }
+
+    function resetView() {
+      currentScale = 0.95;
+      panX = 40;
+      panY = 20;
+      updateTransform();
+    }
+
+    function autoAlign() {
+      location.reload();
+    }
+
+    updateTransform();
+    drawOrthogonalConnections();
+  </script>
+</body>
+</html>

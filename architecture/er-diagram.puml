@@ -1,0 +1,137 @@
+@startuml
+' Klawa Database ER Diagram (Keycloak IDP)
+' Режим orthogonal (строго прямые / квадратные углы связей)
+skinparam linetype ortho
+skinparam roundcorner 5
+skinparam shadowing false
+skinparam monochrome false
+
+skinparam class {
+    BackgroundColor #FFFFFF
+    ArrowColor #2C3E50
+    BorderColor #7F9DB9
+    HeaderBackgroundColor #9AB8DC
+}
+
+entity "user_profile" as user {
+    * **id** : UUID <<PK, Keycloak sub>>
+    --
+    * email : VARCHAR(255) <<UK>>
+    first_name : VARCHAR(100)
+    last_name : VARCHAR(100)
+    * is_active : BOOLEAN
+    * created_at : TIMESTAMPTZ
+    * updated_at : TIMESTAMPTZ
+    deleted_at : TIMESTAMPTZ
+}
+
+entity "project" as project {
+    * **id** : BIGSERIAL <<PK>>
+    --
+    * name : VARCHAR(255)
+    description : TEXT
+    * **user_id** : UUID <<FK>>
+    * created_at : TIMESTAMPTZ
+    * updated_at : TIMESTAMPTZ
+    deleted_at : TIMESTAMPTZ
+}
+
+entity "task" as task {
+    * **id** : BIGSERIAL <<PK>>
+    --
+    * **project_id** : BIGINT <<FK>>
+    * **user_id** : UUID <<FK>>
+    * title : VARCHAR(255)
+    description : TEXT
+    * status : task_status
+    * priority : task_priority
+    due_date : TIMESTAMPTZ
+    completed_at : TIMESTAMPTZ
+    * created_at : TIMESTAMPTZ
+    * updated_at : TIMESTAMPTZ
+    deleted_at : TIMESTAMPTZ
+}
+
+entity "reminder" as reminder {
+    * **id** : BIGSERIAL <<PK>>
+    --
+    * **user_id** : UUID <<FK>>
+    task_id : BIGINT <<FK>>
+    * trigger_time : TIMESTAMPTZ
+    * message : TEXT
+    * status : VARCHAR(20)
+    last_notified_at : TIMESTAMPTZ
+    * created_at : TIMESTAMPTZ
+    * updated_at : TIMESTAMPTZ
+}
+
+entity "notification" as notif {
+    * **id** : BIGSERIAL <<PK>>
+    --
+    * **user_id** : UUID <<FK>>
+    * type : notification_type
+    * message : TEXT
+    * platform : platform_type
+    * is_read : BOOLEAN
+    read_at : TIMESTAMPTZ
+    * created_at : TIMESTAMPTZ
+    * updated_at : TIMESTAMPTZ
+    deleted_at : TIMESTAMPTZ
+}
+
+entity "conversation" as conv {
+    * **id** : UUID <<PK>>
+    --
+    * **user_id** : UUID <<FK>>
+    title : VARCHAR(255)
+    * created_at : TIMESTAMPTZ
+    * updated_at : TIMESTAMPTZ
+    deleted_at : TIMESTAMPTZ
+}
+
+entity "message" as msg {
+    * **id** : UUID <<PK>>
+    --
+    * **conversation_id** : UUID <<FK>>
+    * role : VARCHAR(20)
+    * content : TEXT
+    token_count : INTEGER
+    * created_at : TIMESTAMPTZ
+    * updated_at : TIMESTAMPTZ
+    deleted_at : TIMESTAMPTZ
+}
+
+entity "memory_entry" as memory {
+    * **id** : BIGSERIAL <<PK>>
+    --
+    * **user_id** : UUID <<FK>>
+    * key : VARCHAR(100)
+    * value : TEXT
+    * source : VARCHAR(20)
+    * created_at : TIMESTAMPTZ
+    * updated_at : TIMESTAMPTZ
+    deleted_at : TIMESTAMPTZ
+}
+
+entity "telegram_account" as tg {
+    * **id** : BIGSERIAL <<PK>>
+    --
+    * **user_id** : UUID <<FK>> <<UK>>
+    * telegram_chat_id : BIGINT
+    telegram_username : VARCHAR(64)
+    * linked_at : TIMESTAMPTZ
+}
+
+user ||--o{ project : "owns"
+user ||--o{ task : "owns"
+user ||--o{ reminder : "receives"
+user ||--o{ notif : "receives"
+user ||--o{ conv : "starts"
+user ||--o{ memory : "has"
+user ||--|| tg : "links"
+
+project ||--o{ task : "contains"
+task ||--o{ reminder : "triggers"
+conv ||--o{ msg : "contains"
+
+@enduml

@@ -1,40 +1,71 @@
 services:
-  app:
-    build: .
-    ports:
-      - "8080:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${DB_NAME}
-      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
-      JWT_EXPIRATION: ${JWT_EXPIRATION}
-      JWT_SECRET: ${JWT_SECRET}
-      SPRING_DATA_REDIS_HOST: redis
-      SPRING_DATA_REDIS_PORT: 6379
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_started
-
+  # ==============================================================================
+  # 1. POSTGRESQL (PostgreSQL 17 + pgvector extension)
+  # ==============================================================================
   postgres:
-    image: postgres:17
-    environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USERNAME}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    image: pgvector/pgvector:pg17
+    container_name: klawa-postgres
+    restart: unless-stopped
     ports:
       - "5432:5432"
+    environment:
+      POSTGRES_USER: ${DB_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_DB: klawa_core_db
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/01-init-databases.sql:/docker-entrypoint-initdb.d/01-init-databases.sql:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-postgres}"]
       interval: 5s
       timeout: 5s
       retries: 5
 
+  # ==============================================================================
+  # 2. KEYCLOAK (Identity & Access Management, OAuth2 / OIDC)
+  # ==============================================================================
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0.0
+    container_name: klawa-keycloak
+    restart: unless-stopped
+    command: start-dev --import-realm
+    ports:
+      - "8085:8080"
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HEALTH_ENABLED: "true"
+    volumes:
+      - ./docker/keycloak/klawa-realm.json:/opt/keycloak/data/import/klawa-realm.json:ro
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/8080 && echo -e 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3 && cat <&3 | grep -q '200 OK'"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # ==============================================================================
+  # 3. RABBITMQ (Message Broker + Web UI)
+  # ==============================================================================
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: klawa-rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"    # AMQP protocol
+      - "15672:15672"  # Web Management Dashboard
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+  # ==============================================================================
+  # 4. REDIS (Cache & Sessions)
+  # ==============================================================================
   redis:
-    image: redis:latest
+    image: redis:7-alpine
+    container_name: klawa-redis
+    restart: unless-stopped
     ports:
       - "6379:6379"
     volumes:
@@ -42,4 +73,5 @@ services:
 
 volumes:
   postgres_data:
+  rabbitmq_data:
   redis_data:

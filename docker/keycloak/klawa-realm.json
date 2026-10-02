@@ -1,0 +1,76 @@
+{
+  "realm": "klawa",
+  "enabled": true,
+  "displayName": "Klawa AI Assistant",
+  "sslRequired": "none",
+  "registrationAllowed": true,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "editUsernameAllowed": false,
+  "roles": {
+    "realm": [
+      {
+        "name": "ROLE_USER",
+        "description": "Standard user role"
+      },
+      {
+        "name": "ROLE_ADMIN",
+        "description": "Administrator role"
+      }
+    ]
+  },
+  "defaultRoles": [
+    "ROLE_USER"
+  ],
+  "clients": [
+    {
+      "clientId": "klawa-frontend",
+      "name": "Klawa Web Frontend",
+      "enabled": true,
+      "publicClient": true,
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "redirectUris": [
+        "http://localhost:5173/*",
+        "http://localhost:3000/*"
+      ],
+      "webOrigins": [
+        "*"
+      ]
+    },
+    {
+      "clientId": "klawa-core",
+      "name": "Klawa Core Service",
+      "enabled": true,
+      "bearerOnly": true
+    },
+    {
+      "clientId": "klawa-ai-agent",
+      "name": "Klawa AI Agent Service",
+      "enabled": true,
+      "bearerOnly": true
+    }
+  ],
+  "users": [
+    {
+      "username": "testuser",
+      "email": "test@klawa.ai",
+      "firstName": "Test",
+      "lastName": "User",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "password123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "ROLE_USER"
+      ]
+    }
+  ]
+}
